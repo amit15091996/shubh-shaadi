@@ -99,7 +99,7 @@ function Login() {
           gutterBottom
           sx={{ textAlign: "center", mb: 2, color: "#001d4a" }}
         >
-          Welcome to Subh Shadi
+          Welcome to Shubh Shaadi
         </Typography>
         <Typography
           variant="h5"

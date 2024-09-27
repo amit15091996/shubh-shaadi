@@ -162,7 +162,7 @@ console.log("navbar session",session);
               textTransform: "uppercase",
             }}
           >
-            Shubh Shaadi
+           Shubh Shaadi
           </Typography>
 
           {isMobile ? (
