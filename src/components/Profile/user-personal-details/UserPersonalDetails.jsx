@@ -155,13 +155,13 @@ const UserPersonalDetails = ({ response, refresAfterUpdate }) => {
     setSuccess(false);
     setError("");
   };
-  
+
   const handleSubmit = () => {
     setLoading(true);
     const apiUrl = response
       ? `https://shaadi-be.fino-web-app.agency/api/v1/update-user-personal-details/${mobileNumber}`
       : `https://shaadi-be.fino-web-app.agency/api/v1/save-user-personal-details?mobileNumber=${mobileNumber}`;
-  
+
     fetch(apiUrl, {
       method: response ? "PUT" : "POST",
       headers: {
@@ -175,11 +175,14 @@ const UserPersonalDetails = ({ response, refresAfterUpdate }) => {
         if (data.status === 200) {
           setStatus(!status);
           refresAfterUpdate && refresAfterUpdate(!status);
-          Swal.fire("Success!", "User details updated successfully!", "success")
-            .then(() => {
-              console.log("Closing modal"); // Debug statement
-              toggleModal(); // Close modal after success
-            });
+          Swal.fire(
+            "Success!",
+            "User details updated successfully!",
+            "success"
+          ).then(() => {
+            console.log("Closing modal"); // Debug statement
+            toggleModal(); // Close modal after success
+          });
         } else {
           Swal.fire("Error", "Failed to update user details", "error");
         }
@@ -189,7 +192,6 @@ const UserPersonalDetails = ({ response, refresAfterUpdate }) => {
         Swal.fire("Error", "An error occurred. Please try again.", "error");
       });
   };
-  
 
   return (
     <>
@@ -199,11 +201,13 @@ const UserPersonalDetails = ({ response, refresAfterUpdate }) => {
         transition={{ duration: 0.3 }}
       >
         <ButtonContainer>
-        {mobileNumber === session?.userName && (
-          <ButtonContainer>
-            <Button onClick={toggleModal}>{response ? "Update" : "Add"}</Button>
-          </ButtonContainer>
-        )}
+          {mobileNumber === session?.userName && (
+            <ButtonContainer>
+              <Button onClick={toggleModal}>
+                {response ? "Update" : "Add"}
+              </Button>
+            </ButtonContainer>
+          )}
         </ButtonContainer>
         <ContentWrapper>
           {personalFields.map((field, index) => (
@@ -224,7 +228,9 @@ const UserPersonalDetails = ({ response, refresAfterUpdate }) => {
       {isModalOpen && (
         <ModalOverlay>
           <ModalContent>
-            <ModalHeader>{response ? "Update Profile" : "Add Profile"}</ModalHeader>
+            <ModalHeader>
+              {response ? "Update Profile" : "Add Profile"}
+            </ModalHeader>
             <FormWrapper>
               {personalFields.map((field, index) => (
                 <InputField key={index}>
@@ -235,10 +241,18 @@ const UserPersonalDetails = ({ response, refresAfterUpdate }) => {
                     onChange={(e) =>
                       handleFieldChange(field.key, e.target.value)
                     }
+                    placeholder={
+                      field.key === "userHeight"
+                        ? "In feet"
+                        : field.key === "userWeight"
+                        ? "In kg"
+                        : ""
+                    }
                   />
                 </InputField>
               ))}
             </FormWrapper>
+
             {loading ? (
               <div
                 style={{

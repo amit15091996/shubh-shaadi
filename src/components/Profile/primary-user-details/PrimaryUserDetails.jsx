@@ -5,8 +5,9 @@ import AuthHook from "../../../auth/AuthHook";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { RingLoader } from "react-spinners";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-// Styled components for Card
+// Styled components
 const CardContainer = styled(motion.div)`
   display: flex;
   position: relative;
@@ -53,9 +54,8 @@ const Button = styled.button`
   }
 `;
 
-// Modal styled components
 const ModalOverlay = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -64,7 +64,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  // z-index: 9999; /* Ensure the overlay is on top */
+  z-index: 1000;
 `;
 
 const ModalContent = styled.div`
@@ -73,7 +73,7 @@ const ModalContent = styled.div`
   border-radius: 8px;
   width: 800px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10000; /* Ensure the content is on top of the overlay */
+  z-index: 1001;
 `;
 
 const ModalHeader = styled.h2`
@@ -83,7 +83,7 @@ const ModalHeader = styled.h2`
 
 const FormWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two columns */
+  grid-template-columns: repeat(2, 1fr);
   gap: 15px;
 `;
 
@@ -102,6 +102,11 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
+`;
+
+const StyledSelect = styled(Select)`
+  height: 56px;
+  padding: 0 14px;
 `;
 
 const FileInput = styled.input`
@@ -125,21 +130,26 @@ export const fields = [
   { label: "Community", key: "community" },
   { label: "Date of Birth", key: "dob" },
   { label: "Residence", key: "residence" },
-  { label: "Mobile No", key: "mobileNumber" },
+  { label: "Mobile No", key: "mobileNumber", isDisabled: true },
 ];
 
 // Main Component
-const PrimaryUserDetails = ({ response }) => {
+const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const session = AuthHook();
   const { mobileNumber } = useParams();
 
-  // Handle field changes
+  useEffect(() => {
+    setUpdatedProfile(response);
+  }, [response]);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const handleFieldChange = (key, value) => {
     setUpdatedProfile((prevProfile) => ({
       ...prevProfile,
@@ -147,31 +157,13 @@ const PrimaryUserDetails = ({ response }) => {
     }));
   };
 
-  useEffect(() => {
-    setUpdatedProfile(response);
-  }, [response]);
-
-  console.log(updatedProfile, response);
-  // Handle image file change
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
   };
 
-  // Handle modal open/close
-  const toggleModal = () => {
-    console.log("Toggling modal", !isModalOpen); // Debug statement
-    setIsModalOpen(!isModalOpen);
-    setSuccess(false);
-    setError("");
-  };
-  
-
-  // Handle form submission
   const handleSubmit = () => {
     setLoading(true);
-    setSuccess(false);
-    setError("");
-  
+
     const formData = new FormData();
     Object.keys(updatedProfile).forEach((key) => {
       formData.append(key, updatedProfile[key]);
@@ -179,7 +171,7 @@ const PrimaryUserDetails = ({ response }) => {
     if (profileImage) {
       formData.append("profileImage", profileImage);
     }
-  
+
     fetch("https://shaadi-be.fino-web-app.agency/api/v1/auth/update-profile", {
       method: "PUT",
       body: formData,
@@ -188,35 +180,19 @@ const PrimaryUserDetails = ({ response }) => {
       .then((data) => {
         setLoading(false);
         if (data.status === 200) {
-          Swal.fire({
-            title: "Success!",
-            text: "Profile updated successfully!",
-            icon: "success",
-            confirmButtonText: "OK",
-          }).then(() => {
-            // Ensure modal closes after success
-            toggleModal(); // Close modal after successful update
+          refresAfterUpdate && refresAfterUpdate(); // Refresh data
+          Swal.fire("Success!", "Profile updated successfully!", "success").then(() => {
+            setIsModalOpen(false); // Close modal here
           });
         } else {
-          Swal.fire({
-            title: "Error!",
-            text: "Failed to update profile. Please try again.",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
+          Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
         }
       })
       .catch(() => {
         setLoading(false);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to update profile. Please try again.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
+        Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
       });
   };
-  
 
   return (
     <>
@@ -231,21 +207,20 @@ const PrimaryUserDetails = ({ response }) => {
           </ButtonContainer>
         )}
 
-<ContentWrapper>
-  {fields.map((field, index) => (
-    <Field key={index}>
-      <strong>{field.label}:</strong>{" "}
-      <span style={{ color: "#003566" }}>
-        {response && response[field.key] !== undefined
-          ? Array.isArray(response[field.key])
-            ? response[field.key].join(", ")
-            : response[field.key]
-          : "N/A"}
-      </span>
-    </Field>
-  ))}
-</ContentWrapper>
-
+        <ContentWrapper>
+          {fields.map((field, index) => (
+            <Field key={index}>
+              <strong>{field.label}:</strong>{" "}
+              <span style={{ color: "#003566" }}>
+                {response && response[field.key] !== undefined
+                  ? Array.isArray(response[field.key])
+                    ? response[field.key].join(", ")
+                    : response[field.key]
+                  : "N/A"}
+              </span>
+            </Field>
+          ))}
+        </ContentWrapper>
       </CardContainer>
 
       {/* Modal for editing fields */}
@@ -257,24 +232,55 @@ const PrimaryUserDetails = ({ response }) => {
               {fields.map((field, index) => (
                 <InputField key={index}>
                   <Label>{field.label}</Label>
-                  <Input
-                    type="text"
-                    value={updatedProfile[field.key] || ""}
-                    onChange={(e) =>
-                      handleFieldChange(field.key, e.target.value)
-                    }
-                  />
+                  {field.key === "religion" || field.key === "community" ? (
+                    <FormControl fullWidth>
+                      <StyledSelect
+                        value={updatedProfile[field.key] || ""}
+                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                        MenuProps={{
+                          PaperProps: {
+                            style: {
+                              maxHeight: 300, // Optional: limit dropdown height
+                            },
+                          },
+                        }}
+                      >
+                        {field.key === "religion" && (
+                          <>
+                            <MenuItem value="Hindu">Hindu</MenuItem>
+                            <MenuItem value="Muslim">Muslim</MenuItem>
+                            <MenuItem value="Christian">Christian</MenuItem>
+                            <MenuItem value="Sikh">Sikh</MenuItem>
+                            <MenuItem value="Parsi">Parsi</MenuItem>
+                            <MenuItem value="Jain">Jain</MenuItem>
+                            <MenuItem value="Buddhist">Buddhist</MenuItem>
+                            <MenuItem value="Jewish">Jewish</MenuItem>
+                            <MenuItem value="No Religion">No Religion</MenuItem>
+                          </>
+                        )}
+                        {field.key === "community" && (
+                          <>
+                            <MenuItem value="English">English</MenuItem>
+                            <MenuItem value="Hindu">Hindu</MenuItem>
+                            <MenuItem value="Urdu">Urdu</MenuItem>
+                            <MenuItem value="Telugu">Telugu</MenuItem>
+                            <MenuItem value="Tamil">Tamil</MenuItem>
+                          </>
+                        )}
+                      </StyledSelect>
+                    </FormControl>
+                  ) : (
+                    <Input
+                      type={field.key === "mobileNumber" ? "text" : "text"}
+                      value={updatedProfile[field.key] || ""}
+                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      disabled={field.isDisabled}
+                    />
+                  )}
                 </InputField>
               ))}
-              <InputField>
-                <Label>Profile Image</Label>
-                <FileInput
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-              </InputField>
             </FormWrapper>
+
             {loading ? (
               <div
                 style={{
@@ -287,22 +293,13 @@ const PrimaryUserDetails = ({ response }) => {
                 <RingLoader color="#003566" size={60} />
               </div>
             ) : (
-              <>
-                {success && (
-                  <Message success>Profile updated successfully!</Message>
-                )}
-                {error && <Message>{error}</Message>}
-              </>
+              <Message>{/* Optionally display messages here */}</Message>
             )}
             <br />
             <Button onClick={handleSubmit} disabled={loading}>
               Save Changes
             </Button>
-            <Button
-              onClick={toggleModal}
-              style={{ marginLeft: "10px" }}
-              disabled={loading}
-            >
+            <Button onClick={toggleModal} style={{ marginLeft: "10px" }}>
               Cancel
             </Button>
           </ModalContent>

@@ -6,6 +6,7 @@ import {
   getAllProfiles,
   getProfileImage,
 } from "../../services/userAllDetailsService";
+import { Box, TextField, Pagination } from "@mui/material";
 
 const CardContainer = styled(motion.div)`
   display: flex;
@@ -74,7 +75,7 @@ const Loader = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10; /* Ensure the loader is above the card content */
+  z-index: 10;
 `;
 
 const LoaderAnimation = styled(motion.div)`
@@ -95,6 +96,19 @@ const LoaderAnimation = styled(motion.div)`
   }
 `;
 
+const SearchContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+  width: 100%;
+`;
+
+const ScrollableContainer = styled(Box)`
+  max-height: 80vh;
+  overflow-y: auto;
+  margin-bottom: 20px;
+`;
+
 export const fields = [
   { label: "First Name", key: "firstName" },
   { label: "Last Name", key: "lastName" },
@@ -107,12 +121,17 @@ export const fields = [
   { label: "Date of Birth", key: "dob" },
   { label: "Residence", key: "residence" },
 ];
-const FramerCard = ({ title }) => {
-  const [userDetails, setUserDetails] = useState(null);
+
+const FramerCard = () => {
+  const [userDetails, setUserDetails] = useState([]);
   const [profileImages, setProfileImages] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
+  const pageSize = 10;
 
   const handleMoreDetailsClick = (item) => {
     setLoading(true);
@@ -125,8 +144,9 @@ const FramerCard = ({ title }) => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const details = await getAllProfiles();
+      const details = await getAllProfiles({ page: page - 1, size: pageSize });
       setUserDetails(details?.result || []);
+      setTotalPages(details?.totalPages || 1);
 
       const images = {};
       const mobileNumbers = details?.result.map((user) => user.mobileNumber);
@@ -148,12 +168,27 @@ const FramerCard = ({ title }) => {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [page]);
 
   if (error) return <div>{error}</div>;
 
+  const filteredUserDetails = userDetails.filter((item) =>
+    `${item.firstName} ${item.lastName}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <>
+    <Box>
+      <SearchContainer>
+        <TextField
+          variant="outlined"
+          placeholder="Search by name..."
+          sx={{ bgcolor: "white", width: "300px", left: "-20px" }}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </SearchContainer>
+
       {loading ? (
         <Loader
           initial={{ opacity: 0 }}
@@ -163,9 +198,9 @@ const FramerCard = ({ title }) => {
           <LoaderAnimation />
         </Loader>
       ) : (
-        <>
-          {Array.isArray(userDetails) &&
-            userDetails.map((item, index) => (
+        <ScrollableContainer>
+          {Array.isArray(filteredUserDetails) &&
+            filteredUserDetails.map((item, index) => (
               <CardContainer
                 key={`profile-card-${index}`}
                 initial={{ opacity: 0, x: -100 }}
@@ -191,9 +226,25 @@ const FramerCard = ({ title }) => {
                 </ContentWrapper>
               </CardContainer>
             ))}
-        </>
+      <Pagination
+        count={totalPages}
+        page={page}
+        onChange={(event, value) => setPage(value)}
+        variant="outlined"
+        shape="rounded"
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '20px',
+          marginBottom: '20px',
+          bgcolor: 'white', // Set background color to white
+        }}
+      />
+        </ScrollableContainer>
       )}
-    </>
+
+      {/* Pagination Component */}
+    </Box>
   );
 };
 

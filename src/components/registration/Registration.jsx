@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
   TextField,
   Button,
@@ -72,8 +71,59 @@ function Registration() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check if all required fields are filled
+    const {
+      mobileNumber,
+      firstName,
+      lastName,
+      age,
+      gender,
+      password,
+      confirmPassword,
+      religion,
+      community,
+      dob,
+      residence,
+      profileImage,
+    } = formData;
+
+    if (
+      !mobileNumber ||
+      !firstName ||
+      !lastName ||
+      !age ||
+      !gender ||
+      !password ||
+      !confirmPassword ||
+      !religion ||
+      !community ||
+      !dob ||
+      !residence ||
+      !profileImage
+    ) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please fill in all fields and upload a profile image.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    // Validate mobile number
+    const mobileNumberPattern = /^[0-9]{10}$/;
+    if (!mobileNumberPattern.test(mobileNumber)) {
+      Swal.fire({
+        title: "Error!",
+        text: "Mobile number must be exactly 10 digits.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
     // Check if passwords match
-    if (formData.password !== formData.confirmPassword) {
+    if (password !== confirmPassword) {
       setPasswordError(true);
       Swal.fire({
         title: "Error!",
@@ -104,7 +154,7 @@ function Registration() {
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => {
-        navigate("/profiles");
+        navigate("/login");
       });
     } catch (error) {
       setLoading(false);
@@ -243,22 +293,46 @@ function Registration() {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              name="religion"
-              label="Religion"
-              fullWidth
-              onChange={handleChange}
-              size="small"
-            />
+            <FormControl fullWidth size="small">
+              <InputLabel id="religion-select-label">Religion</InputLabel>
+              <Select
+                name="religion"
+                value={formData.religion}
+                onChange={handleChange}
+                required
+                label={"Religion"}
+              >
+                <MenuItem value="Hindu">Hindu</MenuItem>
+                <MenuItem value="Muslim">Muslim</MenuItem>
+                <MenuItem value="Christian">Christian</MenuItem>
+                <MenuItem value="Sikh">Sikh</MenuItem>
+                <MenuItem value="Parsi">Parsi</MenuItem>
+                <MenuItem value="Jain">Jain</MenuItem>
+                <MenuItem value="Buddhist">Buddhist</MenuItem>
+                <MenuItem value="Jewish">Jewish</MenuItem>
+                <MenuItem value="No Religion">No Religion</MenuItem>
+                <MenuItem value="Spiritual - not religious">Spiritual</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              name="community"
-              label="Community"
-              fullWidth
-              onChange={handleChange}
-              size="small"
-            />
+            <FormControl fullWidth size="small">
+              <InputLabel id="community-select-label">Community</InputLabel>
+              <Select
+                name="community"
+                value={formData.community}
+                onChange={handleChange}
+                required
+                label="Community"
+              >
+                <MenuItem value="English">English</MenuItem>
+                <MenuItem value="Hindu">Hindu</MenuItem>
+                <MenuItem value="Urdu">Urdu</MenuItem>
+                <MenuItem value="Telugu">Telugu</MenuItem>
+                <MenuItem value="Tamil">Tamil</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -266,6 +340,7 @@ function Registration() {
               label="Residence"
               fullWidth
               onChange={handleChange}
+              required
               size="small"
             />
           </Grid>
@@ -280,10 +355,7 @@ function Registration() {
               size="small"
               InputProps={{
                 endAdornment: (
-                  <Button
-                    onClick={() => setShowPassword(!showPassword)}
-                    size="small"
-                  >
+                  <Button onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </Button>
                 ),
