@@ -139,6 +139,7 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [status, setStatus] = useState(false);
   const session = AuthHook();
   const { mobileNumber } = useParams();
 
@@ -180,7 +181,8 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
       .then((data) => {
         setLoading(false);
         if (data.status === 200) {
-          refresAfterUpdate && refresAfterUpdate(); // Refresh data
+          setStatus(!status);
+          refresAfterUpdate && refresAfterUpdate(!status); // Refresh data
           Swal.fire("Success!", "Profile updated successfully!", "success").then(() => {
             setIsModalOpen(false); // Close modal here
           });

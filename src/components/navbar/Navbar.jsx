@@ -17,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import AuthHook from "../../auth/AuthHook";
+import logo from "../../images/Logo.png"; // Import the logo
 
 const Loader = styled(motion.div)`
   position: fixed;
@@ -59,10 +60,13 @@ function Navbar() {
     return userInfo !== null;
   });
 
-const isLogged=useMemo(()=>localStorage.getItem("userInfo")?true:false,[isLoggedIn]);
-const session = AuthHook();
+  const isLogged = useMemo(
+    () => (localStorage.getItem("userInfo") ? true : false),
+    [isLoggedIn]
+  );
+  const session = AuthHook();
 
-console.log("navbar session",session);
+  console.log("navbar session", session);
 
   const navigate = useNavigate();
 
@@ -97,8 +101,6 @@ console.log("navbar session",session);
     setIsLoggedIn(true);
     navigate("/profiles");
   };
-
-
 
   const drawerItems = (
     <Box
@@ -162,9 +164,21 @@ console.log("navbar session",session);
               textTransform: "uppercase",
             }}
           >
-           Shubh Shaadi
+            Shubh Shaadi
           </Typography>
-
+          {/* <img
+            src={logo}
+            alt="Shubh Shaadi Logo"
+            style={{ height: '50px', marginRight: '10px' }} // Adjust height as needed
+          />
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          
+            <img
+              src={logo}
+              alt="Shubh Shaadi Logo"
+              style={{ marginRight: "10px", height: "55px", width:'200px', marginTop: "10px" }}
+            />
+          </Typography> */}
           {isMobile ? (
             <>
               <IconButton
@@ -195,7 +209,7 @@ console.log("navbar session",session);
                 </>
               ) : (
                 <>
-                  <Button color="inherit"  component={Link} to="/login">
+                  <Button color="inherit" component={Link} to="/login">
                     Login
                   </Button>
                   <Button color="inherit" component={Link} to="/register">

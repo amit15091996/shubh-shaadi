@@ -141,7 +141,9 @@ console.log('userDetails ' , userDetails);
             </Grid>
             <Grid item xs={12} md={9}>
               <Box sx={{ padding: 2 }}>
-                <PrimaryUserDetails response={userDetails?.response} />
+                <PrimaryUserDetails
+                 refresAfterUpdate={refresAfterUpdate}
+                response={userDetails?.response} />
                 {/* <UserProfile response={userDetails?.response} /> */}
               </Box>
             </Grid>
