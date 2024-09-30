@@ -105,7 +105,7 @@ const Input = styled.input`
 `;
 
 const StyledSelect = styled(Select)`
-  height: 56px;
+  height: 41px;
   padding: 0 14px;
 `;
 
@@ -252,12 +252,13 @@ const PrimaryUserDetails = ({
                 <InputField key={index}>
                   <Label>{field.label}</Label>
                   {field.key === "religion" || field.key === "community" ? (
-                    <FormControl fullWidth>
+                    <FormControl fullWidth size="small">
                       <StyledSelect
                         value={updatedProfile[field.key] || ""}
                         onChange={(e) =>
                           handleFieldChange(field.key, e.target.value)
                         }
+                        size="small"
                         MenuProps={{
                           PaperProps: {
                             style: {

@@ -327,7 +327,7 @@ function Registration() {
                 label="Community"
               >
                 <MenuItem value="English">English</MenuItem>
-                <MenuItem value="Hindu">Hindi</MenuItem>
+                <MenuItem value="Hindi">Hindi</MenuItem>
                 <MenuItem value="Urdu">Urdu</MenuItem>
                 <MenuItem value="Telugu">Telugu</MenuItem>
                 <MenuItem value="Tamil">Tamil</MenuItem>
