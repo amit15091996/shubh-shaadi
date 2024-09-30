@@ -116,9 +116,14 @@ export const partnerPreferencesFields = [
   { key: "anyOtherPreferences", value: "Other Preferences: " },
 ];
 
-const UserPartnerPreferences = ({ response, refresAfterUpdate }) => {
+const UserPartnerPreferences = ({
+  response,
+  refresAfterUpdate,
+  setStatus,
+  status,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [status, setStatus] = useState(false);
+  // const [status, setStatus] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);

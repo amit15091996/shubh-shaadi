@@ -124,9 +124,8 @@ export const familyFields = [
   { key: "maternalGotra", value: "Maternal Gotra: " },
 ];
 
-const UserFamilyDetails = ({ response, refresAfterUpdate }) => {
+const UserFamilyDetails = ({ response, refresAfterUpdate,setStatus,status }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [status, setStatus] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);

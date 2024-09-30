@@ -128,7 +128,7 @@ const FramerCard = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0); // Initial page value set to 0
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const pageSize = 10;
@@ -144,7 +144,8 @@ const FramerCard = () => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const details = await getAllProfiles({ page: page - 1, size: pageSize });
+      const details = await getAllProfiles({ page, size: pageSize });
+      console.log(details); // Log the API response for debugging
       setUserDetails(details?.result || []);
       setTotalPages(details?.totalPages || 1);
 
@@ -226,24 +227,22 @@ const FramerCard = () => {
                 </ContentWrapper>
               </CardContainer>
             ))}
-      <Pagination
-        count={totalPages}
-        page={page}
-        onChange={(event, value) => setPage(value)}
-        variant="outlined"
-        shape="rounded"
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginTop: '20px',
-          marginBottom: '20px',
-          bgcolor: 'white', // Set background color to white
-        }}
-      />
+          <Pagination
+            count={totalPages}
+            page={page + 1} // Update to show the current page correctly (1-based index)
+            onChange={(event, value) => setPage(value - 1)} // Set page to 0-based index
+            variant="outlined"
+            shape="rounded"
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px',
+              marginBottom: '20px',
+              bgcolor: 'white',
+            }}
+          />
         </ScrollableContainer>
       )}
-
-      {/* Pagination Component */}
     </Box>
   );
 };

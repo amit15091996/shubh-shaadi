@@ -16,9 +16,10 @@ export const getAllUserDetails = async (mobileNumber) => {
     throw error;
   }
 };
-export const getAllProfiles = async () => {
+export const getAllProfiles = async (data) => {
   try {
     const response = await axios.get(`${BASE_URL}/profiles`, {
+      params:data
     });
     return response.data; // Adjust based on your response structure
   } catch (error) {

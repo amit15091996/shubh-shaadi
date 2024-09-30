@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import { getAllUserDetails, getProfileImage } from "../../services/userAllDetailsService";
+import {
+  getAllUserDetails,
+  getProfileImage,
+} from "../../services/userAllDetailsService";
 import FamilyDetails from "./FamilyDetails";
 import { Box, Button, Grid } from "@mui/material";
 // import UserProfile from "../utils/UserProfile";
@@ -84,7 +87,7 @@ const DemoCardDetails = () => {
     try {
       const allData = await getAllUserDetails(mobileNumber);
       setUserDetails(allData);
-console.log('userDetails ' , userDetails);
+      console.log("userDetails ", userDetails);
       const imageUrl = await getProfileImage(mobileNumber);
       setProfileImage(imageUrl);
     } catch (err) {
@@ -100,6 +103,8 @@ console.log('userDetails ' , userDetails);
   useEffect(() => {
     fetchUserData(mobileNumber);
   }, [status]);
+
+  console.log(status);
 
   return (
     <>
@@ -142,8 +147,11 @@ console.log('userDetails ' , userDetails);
             <Grid item xs={12} md={9}>
               <Box sx={{ padding: 2 }}>
                 <PrimaryUserDetails
-                 refresAfterUpdate={refresAfterUpdate}
-                response={userDetails?.response} />
+                  status={status}
+                  setStatus={setStatus}
+                  refresAfterUpdate={refresAfterUpdate}
+                  response={userDetails?.response}
+                />
                 {/* <UserProfile response={userDetails?.response} /> */}
               </Box>
             </Grid>
@@ -182,6 +190,8 @@ console.log('userDetails ' , userDetails);
             <Grid item xs={12} md={12}>
               <Box sx={{ padding: 2, height: "100%" }}>
                 <UserPersonalDetails
+                  status={status}
+                  setStatus={setStatus}
                   refresAfterUpdate={refresAfterUpdate}
                   response={userDetails?.response?.userPersonalDetails}
                 />
@@ -222,6 +232,8 @@ console.log('userDetails ' , userDetails);
             <Grid item xs={12} md={12}>
               <Box sx={{ padding: 2, height: "100%" }}>
                 <UserFamilyDetails
+                  status={status}
+                  setStatus={setStatus}
                   refresAfterUpdate={refresAfterUpdate}
                   response={userDetails?.response?.userFamilyDetails}
                 />
@@ -261,6 +273,8 @@ console.log('userDetails ' , userDetails);
             <Grid item xs={12} md={12}>
               <Box sx={{ padding: 2, height: "100%" }}>
                 <UserLifeStyleAndEducation
+                  status={status}
+                  setStatus={setStatus}
                   refresAfterUpdate={refresAfterUpdate}
                   response={userDetails?.response?.userLifeStyleAndEducation}
                 />
@@ -300,7 +314,9 @@ console.log('userDetails ' , userDetails);
             <Grid item xs={12} md={12}>
               <Box sx={{ padding: 2, height: "100%" }}>
                 <UserPartnerPreferences
-                 refresAfterUpdate={refresAfterUpdate}
+                  status={status}
+                  setStatus={setStatus}
+                  refresAfterUpdate={refresAfterUpdate}
                   response={userDetails?.response?.userPartnerPreferences}
                 />
               </Box>

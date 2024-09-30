@@ -134,12 +134,17 @@ export const fields = [
 ];
 
 // Main Component
-const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
+const PrimaryUserDetails = ({
+  response,
+  refresAfterUpdate,
+  setStatus,
+  status,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const [status, setStatus] = useState(false);
+  // const [status, setStatus] = useState(false);
   const session = AuthHook();
   const { mobileNumber } = useParams();
 
@@ -183,16 +188,28 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
         if (data.status === 200 || data.status === 201) {
           setStatus(!status);
           refresAfterUpdate && refresAfterUpdate(!status); // Refresh data
-          Swal.fire("Success!", "Profile updated successfully!", "success").then(() => {
+          Swal.fire(
+            "Success!",
+            "Profile updated successfully!",
+            "success"
+          ).then(() => {
             setIsModalOpen(false); // Close modal here
           });
         } else {
-          Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
+          Swal.fire(
+            "Error!",
+            "Failed to update profile. Please try again.",
+            "error"
+          );
         }
       })
       .catch(() => {
         setLoading(false);
-        Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
+        Swal.fire(
+          "Error!",
+          "Failed to update profile. Please try again.",
+          "error"
+        );
       });
   };
 
@@ -236,47 +253,74 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
                   <Label>{field.label}</Label>
                   {field.key === "religion" || field.key === "community" ? (
                     <FormControl fullWidth>
-                    <StyledSelect
-                      value={updatedProfile[field.key] || ""}
-                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                      MenuProps={{
-                        PaperProps: {
-                          style: {
-                            maxHeight: 300, // Optional: limit dropdown height
+                      <StyledSelect
+                        value={updatedProfile[field.key] || ""}
+                        onChange={(e) =>
+                          handleFieldChange(field.key, e.target.value)
+                        }
+                        MenuProps={{
+                          PaperProps: {
+                            style: {
+                              maxHeight: 300, // Optional: limit dropdown height
+                            },
                           },
-                        },
-                      }}
-                    >
-                      {field.key === "religion" && (
-                        [
-                          <MenuItem key="Hindu" value="Hindu">Hindu</MenuItem>,
-                          <MenuItem key="Muslim" value="Muslim">Muslim</MenuItem>,
-                          <MenuItem key="Christian" value="Christian">Christian</MenuItem>,
-                          <MenuItem key="Sikh" value="Sikh">Sikh</MenuItem>,
-                          <MenuItem key="Parsi" value="Parsi">Parsi</MenuItem>,
-                          <MenuItem key="Jain" value="Jain">Jain</MenuItem>,
-                          <MenuItem key="Buddhist" value="Buddhist">Buddhist</MenuItem>,
-                          <MenuItem key="Jewish" value="Jewish">Jewish</MenuItem>,
-                          <MenuItem key="No Religion" value="No Religion">No Religion</MenuItem>
-                        ]
-                      )}
-                      {field.key === "community" && (
-                        [
-                          <MenuItem key="English" value="English">English</MenuItem>,
-                          <MenuItem key="Hindi" value="Hindi">Hindi</MenuItem>,
-                          <MenuItem key="Urdu" value="Urdu">Urdu</MenuItem>,
-                          <MenuItem key="Telugu" value="Telugu">Telugu</MenuItem>,
-                          <MenuItem key="Tamil" value="Tamil">Tamil</MenuItem>
-                        ]
-                      )}
-                    </StyledSelect>
-                  </FormControl>
-                  
+                        }}
+                      >
+                        {field.key === "religion" && [
+                          <MenuItem key="Hindu" value="Hindu">
+                            Hindu
+                          </MenuItem>,
+                          <MenuItem key="Muslim" value="Muslim">
+                            Muslim
+                          </MenuItem>,
+                          <MenuItem key="Christian" value="Christian">
+                            Christian
+                          </MenuItem>,
+                          <MenuItem key="Sikh" value="Sikh">
+                            Sikh
+                          </MenuItem>,
+                          <MenuItem key="Parsi" value="Parsi">
+                            Parsi
+                          </MenuItem>,
+                          <MenuItem key="Jain" value="Jain">
+                            Jain
+                          </MenuItem>,
+                          <MenuItem key="Buddhist" value="Buddhist">
+                            Buddhist
+                          </MenuItem>,
+                          <MenuItem key="Jewish" value="Jewish">
+                            Jewish
+                          </MenuItem>,
+                          <MenuItem key="No Religion" value="No Religion">
+                            No Religion
+                          </MenuItem>,
+                        ]}
+                        {field.key === "community" && [
+                          <MenuItem key="English" value="English">
+                            English
+                          </MenuItem>,
+                          <MenuItem key="Hindi" value="Hindi">
+                            Hindi
+                          </MenuItem>,
+                          <MenuItem key="Urdu" value="Urdu">
+                            Urdu
+                          </MenuItem>,
+                          <MenuItem key="Telugu" value="Telugu">
+                            Telugu
+                          </MenuItem>,
+                          <MenuItem key="Tamil" value="Tamil">
+                            Tamil
+                          </MenuItem>,
+                        ]}
+                      </StyledSelect>
+                    </FormControl>
                   ) : (
                     <Input
                       type={field.key === "mobileNumber" ? "text" : "text"}
                       value={updatedProfile[field.key] || ""}
-                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      onChange={(e) =>
+                        handleFieldChange(field.key, e.target.value)
+                      }
                       disabled={field.isDisabled}
                     />
                   )}

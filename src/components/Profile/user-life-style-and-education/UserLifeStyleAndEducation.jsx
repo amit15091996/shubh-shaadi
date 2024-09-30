@@ -116,9 +116,14 @@ export const lifeStyleAndEducationFields = [
   { key: "qualification", value: "Qualification: " },
 ];
 
-const UserLifeStyleAndEducation = ({ response, refresAfterUpdate }) => {
+const UserLifeStyleAndEducation = ({
+  response,
+  refresAfterUpdate,
+  setStatus,
+  status,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [status, setStatus] = useState(false);
+  // const [status, setStatus] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -162,7 +167,11 @@ const UserLifeStyleAndEducation = ({ response, refresAfterUpdate }) => {
         if (data.status === 200 || data.status === 201) {
           setStatus(!status);
           refresAfterUpdate && refresAfterUpdate(!status);
-          Swal.fire("Success!", "User details updated successfully!", "success").then(() => {
+          Swal.fire(
+            "Success!",
+            "User details updated successfully!",
+            "success"
+          ).then(() => {
             toggleModal(); // Close modal after success
           });
         } else {
@@ -184,9 +193,7 @@ const UserLifeStyleAndEducation = ({ response, refresAfterUpdate }) => {
       >
         {mobileNumber === session?.userName && (
           <ButtonContainer>
-            <Button onClick={toggleModal}>
-              {response ? "Update" : "Add"}
-            </Button>
+            <Button onClick={toggleModal}>{response ? "Update" : "Add"}</Button>
           </ButtonContainer>
         )}
         <ContentWrapper>
@@ -209,7 +216,9 @@ const UserLifeStyleAndEducation = ({ response, refresAfterUpdate }) => {
         <ModalOverlay>
           <ModalContent>
             <ModalHeader>
-              {response ? "Update Lifestyle and Education Details" : "Add Lifestyle and Education Details"}
+              {response
+                ? "Update Lifestyle and Education Details"
+                : "Add Lifestyle and Education Details"}
             </ModalHeader>
             <FormWrapper>
               {lifeStyleAndEducationFields.map((field, index) => (

@@ -127,9 +127,14 @@ export const personalFields = [
   { key: "bodyType", value: "Body Type: " },
 ];
 
-const UserPersonalDetails = ({ response, refresAfterUpdate }) => {
+const UserPersonalDetails = ({
+  response,
+  refresAfterUpdate,
+  setStatus,
+  status,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [status, setStatus] = useState(false);
+  // const [status, setStatus] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
