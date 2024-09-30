@@ -180,7 +180,7 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
       .then((response) => response.json())
       .then((data) => {
         setLoading(false);
-        if (data.status === 200) {
+        if (data.status === 200 || data.status === 201) {
           setStatus(!status);
           refresAfterUpdate && refresAfterUpdate(!status); // Refresh data
           Swal.fire("Success!", "Profile updated successfully!", "success").then(() => {

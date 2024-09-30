@@ -164,7 +164,7 @@ const UserPartnerPreferences = ({ response, refresAfterUpdate }) => {
       const data = await res.json();
       setLoading(false);
 
-      if (data.status === 200) {
+      if (data.status === 200 || data.status === 201) {
         setStatus(!status);
         refresAfterUpdate && refresAfterUpdate(!status);
         Swal.fire(

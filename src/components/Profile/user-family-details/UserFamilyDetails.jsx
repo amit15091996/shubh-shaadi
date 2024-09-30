@@ -167,7 +167,7 @@ const UserFamilyDetails = ({ response, refresAfterUpdate }) => {
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
-        if (data.status === 200) {
+        if (data.status === 200 || data.status === 201) {
           setStatus(!status);
           refresAfterUpdate && refresAfterUpdate(!status);
           Swal.fire("Success!", "User details updated successfully!", "success").then(() => {
