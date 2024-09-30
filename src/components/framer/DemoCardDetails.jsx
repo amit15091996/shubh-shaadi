@@ -300,6 +300,7 @@ console.log('userDetails ' , userDetails);
             <Grid item xs={12} md={12}>
               <Box sx={{ padding: 2, height: "100%" }}>
                 <UserPartnerPreferences
+                 refresAfterUpdate={refresAfterUpdate}
                   response={userDetails?.response?.userPartnerPreferences}
                 />
               </Box>
