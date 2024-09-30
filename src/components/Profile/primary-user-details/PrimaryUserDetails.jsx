@@ -236,41 +236,42 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate }) => {
                   <Label>{field.label}</Label>
                   {field.key === "religion" || field.key === "community" ? (
                     <FormControl fullWidth>
-                      <StyledSelect
-                        value={updatedProfile[field.key] || ""}
-                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: 300, // Optional: limit dropdown height
-                            },
+                    <StyledSelect
+                      value={updatedProfile[field.key] || ""}
+                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      MenuProps={{
+                        PaperProps: {
+                          style: {
+                            maxHeight: 300, // Optional: limit dropdown height
                           },
-                        }}
-                      >
-                        {field.key === "religion" && (
-                          <>
-                            <MenuItem value="Hindu">Hindu</MenuItem>
-                            <MenuItem value="Muslim">Muslim</MenuItem>
-                            <MenuItem value="Christian">Christian</MenuItem>
-                            <MenuItem value="Sikh">Sikh</MenuItem>
-                            <MenuItem value="Parsi">Parsi</MenuItem>
-                            <MenuItem value="Jain">Jain</MenuItem>
-                            <MenuItem value="Buddhist">Buddhist</MenuItem>
-                            <MenuItem value="Jewish">Jewish</MenuItem>
-                            <MenuItem value="No Religion">No Religion</MenuItem>
-                          </>
-                        )}
-                        {field.key === "community" && (
-                          <>
-                            <MenuItem value="English">English</MenuItem>
-                            <MenuItem value="Hindu">Hindu</MenuItem>
-                            <MenuItem value="Urdu">Urdu</MenuItem>
-                            <MenuItem value="Telugu">Telugu</MenuItem>
-                            <MenuItem value="Tamil">Tamil</MenuItem>
-                          </>
-                        )}
-                      </StyledSelect>
-                    </FormControl>
+                        },
+                      }}
+                    >
+                      {field.key === "religion" && (
+                        [
+                          <MenuItem key="Hindu" value="Hindu">Hindu</MenuItem>,
+                          <MenuItem key="Muslim" value="Muslim">Muslim</MenuItem>,
+                          <MenuItem key="Christian" value="Christian">Christian</MenuItem>,
+                          <MenuItem key="Sikh" value="Sikh">Sikh</MenuItem>,
+                          <MenuItem key="Parsi" value="Parsi">Parsi</MenuItem>,
+                          <MenuItem key="Jain" value="Jain">Jain</MenuItem>,
+                          <MenuItem key="Buddhist" value="Buddhist">Buddhist</MenuItem>,
+                          <MenuItem key="Jewish" value="Jewish">Jewish</MenuItem>,
+                          <MenuItem key="No Religion" value="No Religion">No Religion</MenuItem>
+                        ]
+                      )}
+                      {field.key === "community" && (
+                        [
+                          <MenuItem key="English" value="English">English</MenuItem>,
+                          <MenuItem key="Hindi" value="Hindi">Hindi</MenuItem>,
+                          <MenuItem key="Urdu" value="Urdu">Urdu</MenuItem>,
+                          <MenuItem key="Telugu" value="Telugu">Telugu</MenuItem>,
+                          <MenuItem key="Tamil" value="Tamil">Tamil</MenuItem>
+                        ]
+                      )}
+                    </StyledSelect>
+                  </FormControl>
+                  
                   ) : (
                     <Input
                       type={field.key === "mobileNumber" ? "text" : "text"}
