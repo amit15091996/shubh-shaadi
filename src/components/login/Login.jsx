@@ -159,6 +159,12 @@ function Login() {
         >
           Don't have an account? <Link to="/register">Register here</Link>
         </Typography>
+        {/* <Typography
+          variant="body2"
+          sx={{ mt: 2, textAlign: "center", color: "#888" }}
+        >
+          Forgot password <Link to="/forgot-password"> Click here</Link>
+        </Typography> */}
       </Container>
     </Box>
   );

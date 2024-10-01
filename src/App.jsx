@@ -17,6 +17,7 @@ import LandingPage from "./components/landing/LandingPage";
 import landingImage from "./images/bg-image-1.jpg";
 import DemoRegister from "./components/utils/DemoRegister";
 import { Box, Card } from "@mui/material";
+import ForgotPassword from "./components/forgot-password/ForgotPassword";
 
 const AppContent = () => {
   const location = useLocation();
@@ -56,6 +57,7 @@ const AppContent = () => {
           <Route path="/card" element={<CardEx />} />
           <Route path="/framer-data" element={<FramerCardData />} />
           <Route path="/profiles" element={<FramerCard />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             path="/all-details/:mobileNumber"
             element={<DemoCardDetails />}
