@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import {
   getProfileImage,
 } from "../../services/userAllDetailsService";
 import { Box, TextField, Pagination, Button } from "@mui/material";
+import AuthHook from "../../auth/AuthHook";
 
 const CardContainer = styled(motion.div)`
   display: flex;
@@ -25,7 +26,9 @@ const ImageWrapper = styled.div`
   background: url(${(props) => props.src}) no-repeat center center;
   background-size: cover;
   height: 100%;
+  background-position: center 20%; // Adjust this value as needed
 `;
+
 
 const ContentWrapper = styled.div`
   flex: 2;
@@ -123,8 +126,8 @@ export const fields = [
 ];
 
 const FramerCard = () => {
-  const [userDetails, setUserDetails] = useState([]); // Current page user details
-  const [allUserDetails, setAllUserDetails] = useState([]); // All user details
+  const [userDetails, setUserDetails] = useState([]);
+  const [allUserDetails, setAllUserDetails] = useState([]);
   const [profileImages, setProfileImages] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -133,6 +136,10 @@ const FramerCard = () => {
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const pageSize = 10;
+
+  const session = AuthHook();
+  const userGender = session.gender; // Get the logged-in user's gender
+  const oppositeGender = userGender === 'male' ? 'female' : 'male'; // Determine the opposite gender
 
   const handleMoreDetailsClick = (item) => {
     setLoading(true);
@@ -145,9 +152,10 @@ const FramerCard = () => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const details = await getAllProfiles({ page, size: pageSize });
+      // Pass the opposite gender to the API
+      const details = await getAllProfiles({ page, size: pageSize, gender: oppositeGender });
       setUserDetails(details?.result || []);
-      setAllUserDetails(details?.result || []); // Store all user details
+      setAllUserDetails(details?.result || []);
       setTotalPages(details?.totalPages || 1);
 
       const images = {};
@@ -155,7 +163,7 @@ const FramerCard = () => {
 
       await Promise.all(
         mobileNumbers.map(async (number) => {
-          const { imageUrl, status } = await getProfileImage(number);
+          const { imageUrl } = await getProfileImage(number);
           images[number] = imageUrl;
         })
       );
@@ -170,7 +178,7 @@ const FramerCard = () => {
 
   useEffect(() => {
     fetchUserData();
-  }, [page]);
+  }, [page, userGender]); // Include userGender as a dependency if needed
 
   if (error) return <div>{error}</div>;
 
@@ -182,19 +190,20 @@ const FramerCard = () => {
     );
 
     setUserDetails(filteredUsers);
-    setTotalPages(Math.ceil(filteredUsers.length / pageSize)); // Update total pages based on filtered results
-    setPage(0); // Reset to the first page
+    setTotalPages(Math.ceil(filteredUsers.length / pageSize));
+    setPage(0);
   };
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    setUserDetails(allUserDetails); // Reset user details to all users
-    setTotalPages(Math.ceil(allUserDetails.length / pageSize)); // Reset total pages
-    setPage(0); // Reset to the first page
+    setUserDetails(allUserDetails);
+    setTotalPages(Math.ceil(allUserDetails.length / pageSize));
+    setPage(0);
   };
 
   return (
     <Box>
+      {/* Search and Clear Buttons */}
       <SearchContainer>
         <TextField
           variant="outlined"
@@ -203,18 +212,10 @@ const FramerCard = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Button
-          onClick={handleSearch}
-          variant="contained"
-          sx={{ ml: 1, mr: 1 }} // Add margin to the right
-        >
+        <Button onClick={handleSearch} variant="contained" sx={{ ml: 1, mr: 1 }}>
           Search
         </Button>
-        <Button
-          onClick={handleClearSearch}
-          
-          sx={{ ml: 1, mr: 2, color:'brown', bgcolor:'pink' }} // Add margin to the left
-        >
+        <Button onClick={handleClearSearch} sx={{ ml: 1, mr: 2, color:'brown', bgcolor:'pink' }}>
           Clear
         </Button>
       </SearchContainer>
@@ -244,9 +245,7 @@ const FramerCard = () => {
                     <Title>
                       {item.firstName} {item.lastName}
                     </Title>
-                    <MoreDetailsButton
-                      onClick={() => handleMoreDetailsClick(item)}
-                    >
+                    <MoreDetailsButton onClick={() => handleMoreDetailsClick(item)}>
                       More Details
                     </MoreDetailsButton>
                     {fields.map((field, index) => (
@@ -260,8 +259,8 @@ const FramerCard = () => {
               ))}
           <Pagination
             count={totalPages}
-            page={page + 1} // Show the current page correctly (1-based index)
-            onChange={(event, value) => setPage(value - 1)} // Set page to 0-based index
+            page={page + 1}
+            onChange={(event, value) => setPage(value - 1)}
             variant="outlined"
             shape="rounded"
             sx={{

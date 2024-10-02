@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -15,7 +14,6 @@ import FramerCard from "./components/framer/FramerCard";
 import PrimaryUserDetails from "./components/Profile/primary-user-details/PrimaryUserDetails";
 import LandingPage from "./components/landing/LandingPage";
 import landingImage from "./images/bg-image-1.jpg";
-import DemoRegister from "./components/utils/DemoRegister";
 import { Box, Card } from "@mui/material";
 import ForgotPassword from "./components/forgot-password/ForgotPassword";
 

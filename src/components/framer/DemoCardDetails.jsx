@@ -77,6 +77,16 @@ const fields = [
   "Field 9: Continuing with content",
   "Field 10: Final content piece",
 ];
+
+// Inside your ImageCard component's styled component
+const ImageWrapper = styled.div`
+  flex: 1;
+  background: url(${(props) => props.src}) no-repeat center;
+  background-size: cover;
+  height: 100%;
+  background-position: center 20%; // Adjust this value as needed
+`;
+
 const DemoCardDetails = () => {
   const session = AuthHook();
   const [userDetails, setUserDetails] = useState(null);
@@ -146,11 +156,12 @@ const DemoCardDetails = () => {
                   setStatus={setStatus}
                   refresAfterUpdate={refresAfterUpdate}
                   mobileNumber={mobileNumber}
+                  imageUrl={profileImage} // Pass the image URL to ImageCard
                 />
               </Box>
             </Grid>
             <Grid item xs={12} md={9}>
-              <Box sx={{ padding: 2 }}>
+              <Box sx={{ padding: 2, height: "100%" }}>
                 <PrimaryUserDetails
                   status={status}
                   setStatus={setStatus}

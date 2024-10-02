@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import AuthHook from "../../../auth/AuthHook";
@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 import { RingLoader } from "react-spinners";
 import { FormControl, Select, MenuItem, TextField } from "@mui/material";
 
-// Styled components
 const CardContainer = styled(motion.div)`
   display: flex;
   position: relative;
@@ -16,32 +15,34 @@ const CardContainer = styled(motion.div)`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 1050px;
   background-color: #fcd5ce;
-  max-height: 300px;
+  height: 300px;
 `;
 
 const ContentWrapper = styled.div`
-  flex: 2;
-  padding: 30px;
+  flex: 2;  
+  padding: 35px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr;
-  gap: 15px;
-  align-items: start; /* Align items to the start */
+  gap: 20px; // Ensure this value is consistent
+  align-items: start;
 `;
 
 const Field = styled.div`
-  padding: 10px;
+  // padding: 15px;
+  margin: 0;
   border-radius: 4px;
   color: #1f7a8c;
   font-size: 20px;
-  max-height: 60px; /* Set a max height */
-  overflow-y: auto; /* Allow vertical scrolling */
-  word-wrap: break-word; /* Allow words to break */
+  // line-height: 1.5; // Ensure consistent line height
+  overflow-y: auto;
+  word-wrap: break-word;
+  max-height: 60px;
 `;
 
 const ResidenceField = styled(Field)`
-  max-height: 120px; /* Increase max height for the residence field */
-  overflow: auto; /* Allow scrolling */
+  max-height: 120px;
+  overflow: auto;
 `;
 
 const ButtonContainer = styled.div`
@@ -143,7 +144,12 @@ export const fields = [
 ];
 
 // Main Component
-const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) => {
+const PrimaryUserDetails = ({
+  response,
+  refresAfterUpdate,
+  setStatus,
+  status,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
@@ -203,17 +209,29 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) 
             }));
           }
 
-          Swal.fire("Success!", "Profile updated successfully!", "success").then(() => {
+          Swal.fire(
+            "Success!",
+            "Profile updated successfully!",
+            "success"
+          ).then(() => {
             setIsModalOpen(false);
             window.location.reload();
           });
         } else {
-          Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
+          Swal.fire(
+            "Error!",
+            "Failed to update profile. Please try again.",
+            "error"
+          );
         }
       })
       .catch(() => {
         setLoading(false);
-        Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
+        Swal.fire(
+          "Error!",
+          "Failed to update profile. Please try again.",
+          "error"
+        );
       });
   };
 
@@ -231,7 +249,7 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) 
         )}
 
         <ContentWrapper>
-          {fields.map((field, index) => (
+          {fields.map((field, index) =>
             field.key === "residence" ? (
               <ResidenceField key={index}>
                 <strong>{field.label}:</strong>{" "}
@@ -253,7 +271,7 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) 
                 </span>
               </Field>
             )
-          ))}
+          )}
         </ContentWrapper>
       </CardContainer>
 
@@ -270,7 +288,9 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) 
                       size="small"
                       type="date"
                       value={updatedProfile[field.key] || ""}
-                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      onChange={(e) =>
+                        handleFieldChange(field.key, e.target.value)
+                      }
                       fullWidth
                       InputLabelProps={{ shrink: true }}
                     />
@@ -278,26 +298,56 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) 
                     <FormControl fullWidth size="small">
                       <StyledSelect
                         value={updatedProfile[field.key] || ""}
-                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(field.key, e.target.value)
+                        }
                         size="small"
                       >
                         {field.key === "religion" && [
-                          <MenuItem key="Hindu" value="Hindu">Hindu</MenuItem>,
-                          <MenuItem key="Muslim" value="Muslim">Muslim</MenuItem>,
-                          <MenuItem key="Christian" value="Christian">Christian</MenuItem>,
-                          <MenuItem key="Sikh" value="Sikh">Sikh</MenuItem>,
-                          <MenuItem key="Parsi" value="Parsi">Parsi</MenuItem>,
-                          <MenuItem key="Jain" value="Jain">Jain</MenuItem>,
-                          <MenuItem key="Buddhist" value="Buddhist">Buddhist</MenuItem>,
-                          <MenuItem key="Jewish" value="Jewish">Jewish</MenuItem>,
-                          <MenuItem key="No Religion" value="No Religion">No Religion</MenuItem>,
+                          <MenuItem key="Hindu" value="Hindu">
+                            Hindu
+                          </MenuItem>,
+                          <MenuItem key="Muslim" value="Muslim">
+                            Muslim
+                          </MenuItem>,
+                          <MenuItem key="Christian" value="Christian">
+                            Christian
+                          </MenuItem>,
+                          <MenuItem key="Sikh" value="Sikh">
+                            Sikh
+                          </MenuItem>,
+                          <MenuItem key="Parsi" value="Parsi">
+                            Parsi
+                          </MenuItem>,
+                          <MenuItem key="Jain" value="Jain">
+                            Jain
+                          </MenuItem>,
+                          <MenuItem key="Buddhist" value="Buddhist">
+                            Buddhist
+                          </MenuItem>,
+                          <MenuItem key="Jewish" value="Jewish">
+                            Jewish
+                          </MenuItem>,
+                          <MenuItem key="No Religion" value="No Religion">
+                            No Religion
+                          </MenuItem>,
                         ]}
                         {field.key === "community" && [
-                          <MenuItem key="English" value="English">English</MenuItem>,
-                          <MenuItem key="Hindi" value="Hindi">Hindi</MenuItem>,
-                          <MenuItem key="Urdu" value="Urdu">Urdu</MenuItem>,
-                          <MenuItem key="Telugu" value="Telugu">Telugu</MenuItem>,
-                          <MenuItem key="Tamil" value="Tamil">Tamil</MenuItem>,
+                          <MenuItem key="English" value="English">
+                            English
+                          </MenuItem>,
+                          <MenuItem key="Hindi" value="Hindi">
+                            Hindi
+                          </MenuItem>,
+                          <MenuItem key="Urdu" value="Urdu">
+                            Urdu
+                          </MenuItem>,
+                          <MenuItem key="Telugu" value="Telugu">
+                            Telugu
+                          </MenuItem>,
+                          <MenuItem key="Tamil" value="Tamil">
+                            Tamil
+                          </MenuItem>,
                         ]}
                       </StyledSelect>
                     </FormControl>
@@ -305,7 +355,9 @@ const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) 
                     <Input
                       type={field.key === "age" ? "number" : "text"}
                       value={updatedProfile[field.key] || ""}
-                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                      onChange={(e) =>
+                        handleFieldChange(field.key, e.target.value)
+                      }
                       disabled={field.isDisabled}
                     />
                   )}
