@@ -153,7 +153,7 @@ const FramerCard = () => {
     try {
       setLoading(true);
       // Pass the opposite gender to the API
-      const details = await getAllProfiles({ page, size: pageSize, gender: oppositeGender });
+      const details = await getAllProfiles({ page, size: pageSize, gender: userGender });
       setUserDetails(details?.result || []);
       setAllUserDetails(details?.result || []);
       setTotalPages(details?.totalPages || 1);
