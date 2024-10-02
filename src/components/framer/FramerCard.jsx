@@ -6,7 +6,7 @@ import {
   getAllProfiles,
   getProfileImage,
 } from "../../services/userAllDetailsService";
-import { Box, TextField, Pagination } from "@mui/material";
+import { Box, TextField, Pagination, Button } from "@mui/material";
 
 const CardContainer = styled(motion.div)`
   display: flex;
@@ -123,12 +123,13 @@ export const fields = [
 ];
 
 const FramerCard = () => {
-  const [userDetails, setUserDetails] = useState([]);
+  const [userDetails, setUserDetails] = useState([]); // Current page user details
+  const [allUserDetails, setAllUserDetails] = useState([]); // All user details
   const [profileImages, setProfileImages] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(0); // Initial page value set to 0
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const pageSize = 10;
@@ -145,8 +146,8 @@ const FramerCard = () => {
     try {
       setLoading(true);
       const details = await getAllProfiles({ page, size: pageSize });
-      console.log(details); // Log the API response for debugging
       setUserDetails(details?.result || []);
+      setAllUserDetails(details?.result || []); // Store all user details
       setTotalPages(details?.totalPages || 1);
 
       const images = {};
@@ -154,7 +155,7 @@ const FramerCard = () => {
 
       await Promise.all(
         mobileNumbers.map(async (number) => {
-          const { imageUrl, status }= await getProfileImage(number);
+          const { imageUrl, status } = await getProfileImage(number);
           images[number] = imageUrl;
         })
       );
@@ -173,11 +174,24 @@ const FramerCard = () => {
 
   if (error) return <div>{error}</div>;
 
-  const filteredUserDetails = userDetails.filter((item) =>
-    `${item.firstName} ${item.lastName}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const handleSearch = () => {
+    const filteredUsers = allUserDetails.filter((item) =>
+      `${item.firstName} ${item.lastName}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+
+    setUserDetails(filteredUsers);
+    setTotalPages(Math.ceil(filteredUsers.length / pageSize)); // Update total pages based on filtered results
+    setPage(0); // Reset to the first page
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setUserDetails(allUserDetails); // Reset user details to all users
+    setTotalPages(Math.ceil(allUserDetails.length / pageSize)); // Reset total pages
+    setPage(0); // Reset to the first page
+  };
 
   return (
     <Box>
@@ -186,8 +200,23 @@ const FramerCard = () => {
           variant="outlined"
           placeholder="Search by name..."
           sx={{ bgcolor: "white", width: "300px", left: "-20px" }}
+          value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <Button
+          onClick={handleSearch}
+          variant="contained"
+          sx={{ ml: 1, mr: 1 }} // Add margin to the right
+        >
+          Search
+        </Button>
+        <Button
+          onClick={handleClearSearch}
+          
+          sx={{ ml: 1, mr: 2, color:'brown', bgcolor:'pink' }} // Add margin to the left
+        >
+          Clear
+        </Button>
       </SearchContainer>
 
       {loading ? (
@@ -200,45 +229,47 @@ const FramerCard = () => {
         </Loader>
       ) : (
         <ScrollableContainer>
-          {Array.isArray(filteredUserDetails) &&
-            filteredUserDetails.map((item, index) => (
-              <CardContainer
-                key={`profile-card-${index}`}
-                initial={{ opacity: 0, x: -100 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ImageWrapper src={profileImages[item.mobileNumber]} />
-                <ContentWrapper>
-                  <Title>
-                    {item.firstName} {item.lastName}
-                  </Title>
-                  <MoreDetailsButton
-                    onClick={() => handleMoreDetailsClick(item)}
-                  >
-                    More Details
-                  </MoreDetailsButton>
-                  {fields.map((field, index) => (
-                    <Field key={index}>
-                      <strong>{field.label}:</strong>{" "}
-                      {item[field.key] ? item[field.key] : "N/A"}
-                    </Field>
-                  ))}
-                </ContentWrapper>
-              </CardContainer>
-            ))}
+          {Array.isArray(userDetails) &&
+            userDetails
+              .slice(page * pageSize, (page + 1) * pageSize)
+              .map((item, index) => (
+                <CardContainer
+                  key={`profile-card-${index}`}
+                  initial={{ opacity: 0, x: -100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ImageWrapper src={profileImages[item.mobileNumber]} />
+                  <ContentWrapper>
+                    <Title>
+                      {item.firstName} {item.lastName}
+                    </Title>
+                    <MoreDetailsButton
+                      onClick={() => handleMoreDetailsClick(item)}
+                    >
+                      More Details
+                    </MoreDetailsButton>
+                    {fields.map((field, index) => (
+                      <Field key={index}>
+                        <strong>{field.label}:</strong>{" "}
+                        {item[field.key] ? item[field.key] : "N/A"}
+                      </Field>
+                    ))}
+                  </ContentWrapper>
+                </CardContainer>
+              ))}
           <Pagination
             count={totalPages}
-            page={page + 1} // Update to show the current page correctly (1-based index)
+            page={page + 1} // Show the current page correctly (1-based index)
             onChange={(event, value) => setPage(value - 1)} // Set page to 0-based index
             variant="outlined"
             shape="rounded"
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '20px',
-              marginBottom: '20px',
-              bgcolor: 'white',
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
+              marginBottom: "20px",
+              bgcolor: "white",
             }}
           />
         </ScrollableContainer>
