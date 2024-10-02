@@ -5,7 +5,7 @@ import AuthHook from "../../../auth/AuthHook";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { RingLoader } from "react-spinners";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FormControl, Select, MenuItem, TextField } from "@mui/material";
 
 // Styled components
 const CardContainer = styled(motion.div)`
@@ -144,7 +144,6 @@ const PrimaryUserDetails = ({
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  // const [status, setStatus] = useState(false);
   const session = AuthHook();
   const { mobileNumber } = useParams();
 
@@ -157,6 +156,10 @@ const PrimaryUserDetails = ({
   };
 
   const handleFieldChange = (key, value) => {
+    // For age, ensure it's a number
+    if (key === "age" && isNaN(value)) {
+      return; // Prevent setting invalid age
+    }
     setUpdatedProfile((prevProfile) => ({
       ...prevProfile,
       [key]: value,
@@ -187,29 +190,26 @@ const PrimaryUserDetails = ({
         setLoading(false);
         if (data.status === 200 || data.status === 201) {
           setStatus(!status);
-          refresAfterUpdate && refresAfterUpdate(!status); // Refresh data
-          Swal.fire(
-            "Success!",
-            "Profile updated successfully!",
-            "success"
-          ).then(() => {
-            setIsModalOpen(false); // Close modal here
+          refresAfterUpdate && refresAfterUpdate(!status);
+
+          if (data.profileImage) {
+            setUpdatedProfile((prevProfile) => ({
+              ...prevProfile,
+              profileImage: data.profileImage,
+            }));
+          }
+
+          Swal.fire("Success!", "Profile updated successfully!", "success").then(() => {
+            setIsModalOpen(false);
+            window.location.reload();
           });
         } else {
-          Swal.fire(
-            "Error!",
-            "Failed to update profile. Please try again.",
-            "error"
-          );
+          Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
         }
       })
       .catch(() => {
         setLoading(false);
-        Swal.fire(
-          "Error!",
-          "Failed to update profile. Please try again.",
-          "error"
-        );
+        Swal.fire("Error!", "Failed to update profile. Please try again.", "error");
       });
   };
 
@@ -242,7 +242,6 @@ const PrimaryUserDetails = ({
         </ContentWrapper>
       </CardContainer>
 
-      {/* Modal for editing fields */}
       {isModalOpen && (
         <ModalOverlay>
           <ModalContent>
@@ -251,7 +250,18 @@ const PrimaryUserDetails = ({
               {fields.map((field, index) => (
                 <InputField key={index}>
                   <Label>{field.label}</Label>
-                  {field.key === "religion" || field.key === "community" ? (
+                  {field.key === "dob" ? (
+                    <TextField
+                    size="small"
+                      type="date"
+                      value={updatedProfile[field.key] || ""}
+                      onChange={(e) =>
+                        handleFieldChange(field.key, e.target.value)
+                      }
+                      fullWidth
+                      InputLabelProps={{ shrink: true }}
+                    />
+                  ) : field.key === "religion" || field.key === "community" ? (
                     <FormControl fullWidth size="small">
                       <StyledSelect
                         value={updatedProfile[field.key] || ""}
@@ -259,65 +269,30 @@ const PrimaryUserDetails = ({
                           handleFieldChange(field.key, e.target.value)
                         }
                         size="small"
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: 300, // Optional: limit dropdown height
-                            },
-                          },
-                        }}
                       >
                         {field.key === "religion" && [
-                          <MenuItem key="Hindu" value="Hindu">
-                            Hindu
-                          </MenuItem>,
-                          <MenuItem key="Muslim" value="Muslim">
-                            Muslim
-                          </MenuItem>,
-                          <MenuItem key="Christian" value="Christian">
-                            Christian
-                          </MenuItem>,
-                          <MenuItem key="Sikh" value="Sikh">
-                            Sikh
-                          </MenuItem>,
-                          <MenuItem key="Parsi" value="Parsi">
-                            Parsi
-                          </MenuItem>,
-                          <MenuItem key="Jain" value="Jain">
-                            Jain
-                          </MenuItem>,
-                          <MenuItem key="Buddhist" value="Buddhist">
-                            Buddhist
-                          </MenuItem>,
-                          <MenuItem key="Jewish" value="Jewish">
-                            Jewish
-                          </MenuItem>,
-                          <MenuItem key="No Religion" value="No Religion">
-                            No Religion
-                          </MenuItem>,
+                          <MenuItem key="Hindu" value="Hindu">Hindu</MenuItem>,
+                          <MenuItem key="Muslim" value="Muslim">Muslim</MenuItem>,
+                          <MenuItem key="Christian" value="Christian">Christian</MenuItem>,
+                          <MenuItem key="Sikh" value="Sikh">Sikh</MenuItem>,
+                          <MenuItem key="Parsi" value="Parsi">Parsi</MenuItem>,
+                          <MenuItem key="Jain" value="Jain">Jain</MenuItem>,
+                          <MenuItem key="Buddhist" value="Buddhist">Buddhist</MenuItem>,
+                          <MenuItem key="Jewish" value="Jewish">Jewish</MenuItem>,
+                          <MenuItem key="No Religion" value="No Religion">No Religion</MenuItem>,
                         ]}
                         {field.key === "community" && [
-                          <MenuItem key="English" value="English">
-                            English
-                          </MenuItem>,
-                          <MenuItem key="Hindi" value="Hindi">
-                            Hindi
-                          </MenuItem>,
-                          <MenuItem key="Urdu" value="Urdu">
-                            Urdu
-                          </MenuItem>,
-                          <MenuItem key="Telugu" value="Telugu">
-                            Telugu
-                          </MenuItem>,
-                          <MenuItem key="Tamil" value="Tamil">
-                            Tamil
-                          </MenuItem>,
+                          <MenuItem key="English" value="English">English</MenuItem>,
+                          <MenuItem key="Hindi" value="Hindi">Hindi</MenuItem>,
+                          <MenuItem key="Urdu" value="Urdu">Urdu</MenuItem>,
+                          <MenuItem key="Telugu" value="Telugu">Telugu</MenuItem>,
+                          <MenuItem key="Tamil" value="Tamil">Tamil</MenuItem>,
                         ]}
                       </StyledSelect>
                     </FormControl>
                   ) : (
                     <Input
-                      type={field.key === "mobileNumber" ? "text" : "text"}
+                      type={field.key === "age" ? "number" : "text"}
                       value={updatedProfile[field.key] || ""}
                       onChange={(e) =>
                         handleFieldChange(field.key, e.target.value)
@@ -327,6 +302,15 @@ const PrimaryUserDetails = ({
                   )}
                 </InputField>
               ))}
+              {/* Image Upload Input */}
+              <InputField>
+                <Label>Profile Image:</Label>
+                <FileInput
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </InputField>
             </FormWrapper>
 
             {loading ? (

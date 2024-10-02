@@ -60,14 +60,7 @@ function Navbar() {
     return userInfo !== null;
   });
 
-  const isLogged = useMemo(
-    () => (localStorage.getItem("userInfo") ? true : false),
-    [isLoggedIn]
-  );
   const session = AuthHook();
-
-  console.log("navbar session", session);
-
   const navigate = useNavigate();
 
   const toggleDrawer = (open) => (event) => {
@@ -102,6 +95,12 @@ function Navbar() {
     navigate("/profiles");
   };
 
+  const handleProfileClick = () => {
+    if (session?.userName) {
+      navigate(`/all-details/${session.userName}`);
+    }
+  };
+
   const drawerItems = (
     <Box
       sx={{ width: 250 }}
@@ -112,7 +111,10 @@ function Navbar() {
       <List>
         {session?.jwtToken ? (
           <>
-            <ListItem button component={Link} to="/">
+            <ListItem button onClick={handleProfileClick}>
+              <ListItemText primary="My Profile" />
+            </ListItem>
+            <ListItem button component={Link} to="/profiles">
               <ListItemText primary="Dashboard" />
             </ListItem>
             <ListItem button onClick={handleLogout}>
@@ -121,6 +123,9 @@ function Navbar() {
           </>
         ) : (
           <>
+            <ListItem button component={Link} to="/">
+              <ListItemText primary="Home" />
+            </ListItem>
             <ListItem button component={Link} to="/login">
               <ListItemText primary="Login" />
             </ListItem>
@@ -152,33 +157,26 @@ function Navbar() {
         position="static"
       >
         <Toolbar>
-          <Typography
-            variant="h6"
-            sx={{
-              flexGrow: 1,
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: "bold",
-              fontSize: "1.5rem",
-              color: "#f50057",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-            }}
-          >
-            Shubh Shaadi
-          </Typography>
-          {/* <img
-            src={logo}
-            alt="Shubh Shaadi Logo"
-            style={{ height: '50px', marginRight: '10px' }} // Adjust height as needed
-          />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          
-            <img
-              src={logo}
-              alt="Shubh Shaadi Logo"
-              style={{ marginRight: "10px", height: "55px", width:'200px', marginTop: "10px" }}
-            />
-          </Typography> */}
+        <Typography
+  variant="h6"
+  sx={{
+    flexGrow: 1,
+    fontFamily: "'Lobster', cursive",
+    fontWeight: "bold",
+    fontSize: "2rem", // Increased font size for impact
+    color: "#f50057",
+    letterSpacing: "0.1em", // Slightly increased letter spacing
+    textTransform: "uppercase",
+    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.3)", // Adding text shadow for depth
+    background: "linear-gradient(to right, #f50057, #ff4081)", // Gradient background
+    WebkitBackgroundClip: "text", // For text gradient
+    WebkitTextFillColor: "transparent", // For text gradient
+  }}
+>
+  Shubh Shaadi
+</Typography>
+
+
           {isMobile ? (
             <>
               <IconButton
@@ -200,6 +198,9 @@ function Navbar() {
             <Box sx={{ display: "flex", gap: "10px" }}>
               {session?.jwtToken ? (
                 <>
+                  <Button color="inherit" onClick={handleProfileClick}>
+                    My Profile
+                  </Button>
                   <Button color="inherit" component={Link} to="/profiles">
                     Dashboard
                   </Button>
@@ -209,6 +210,9 @@ function Navbar() {
                 </>
               ) : (
                 <>
+                  <Button color="inherit" component={Link} to="/">
+                    Home
+                  </Button>
                   <Button color="inherit" component={Link} to="/login">
                     Login
                   </Button>

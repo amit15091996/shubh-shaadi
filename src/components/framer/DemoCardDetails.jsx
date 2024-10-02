@@ -141,7 +141,12 @@ const DemoCardDetails = () => {
                 {/* {
                   mobileNumber == session?.userName && <Button>Add</Button>
                 } */}
-                <ImageCard mobileNumber={mobileNumber} />
+                <ImageCard
+                  status={status}
+                  setStatus={setStatus}
+                  refresAfterUpdate={refresAfterUpdate}
+                  mobileNumber={mobileNumber}
+                />
               </Box>
             </Grid>
             <Grid item xs={12} md={9}>

@@ -9,16 +9,12 @@ const CardContainer = styled(motion.div)`
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  // max-width: 300px;
-  // margin: 20px; /* Adjust this to add spacing around the card */
-  // margin-left: 180px; /* Add more margin on the left to move the card right */
   background-color: #fcd5ce;
   position: relative;
   height: 300px;
-  width:"100%",
+  width: 100%;
   align-self: flex-start;
 `;
-
 
 const ImageWrapper = styled.div`
   flex: 1;
@@ -28,25 +24,41 @@ const ImageWrapper = styled.div`
   height: 100%; /* Make sure the image takes up the full height of the card */
 `;
 
-const ImageCard = ({ mobileNumber }) => {
+const ImageCard = ({
+  mobileNumber,
+  refresAfterUpdate,
+  setStatus,
+  status,
+}) => {
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchUserData = async () => {
     try {
-      const imageUrl = await getProfileImage(mobileNumber);
-      setProfileImage(imageUrl);
+      const { imageUrl, status } = await getProfileImage(mobileNumber);
+      console.log('resimageUrl', imageUrl);
+      console.log('imgsta',status);
+      
+      if (status === 200) {
+        setStatus(!status);
+        refresAfterUpdate && refresAfterUpdate(!status);
+        setProfileImage(imageUrl);
+        // Perform any action needed for a successful status
+        setStatus('Image loaded successfully');
+      } else {
+        setError(`Failed to load profile image. Status code: ${status}`);
+      }
     } catch (err) {
       setError("Failed to load profile image");
     } finally {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [mobileNumber]); // Ensure it runs again if mobileNumber changes
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;

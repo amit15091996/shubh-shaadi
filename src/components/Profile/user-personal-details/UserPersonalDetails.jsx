@@ -63,7 +63,6 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  // z-index: 9999; /* Ensure the overlay is on top */
 `;
 
 const ModalContent = styled.div`
@@ -72,7 +71,6 @@ const ModalContent = styled.div`
   border-radius: 8px;
   width: 800px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  // z-index: 10000; /* Ensure the content is on top of the overlay */
 `;
 
 const ModalHeader = styled.h2`
@@ -117,7 +115,7 @@ export const personalFields = [
   { key: "manglik", value: "Manglik: " },
   { key: "maritalStatus", value: "Marital Status: " },
   { key: "isPersonDisabled", value: "Is Disabled: " },
-  { key: "userIncome", value: "Income: " },
+  { key: "userIncome", value: "Monthly Income" },
   { key: "isUserStayingAlone", value: "Is Staying Alone: " },
   { key: "hobbies", value: "Hobbies: " },
   { key: "birthPlace", value: "Birth Place: " },
@@ -134,11 +132,8 @@ const UserPersonalDetails = ({
   status,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [status, setStatus] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
   const session = AuthHook();
   const { mobileNumber } = useParams();
 
@@ -155,10 +150,7 @@ const UserPersonalDetails = ({
 
   // Handle modal open/close
   const toggleModal = () => {
-    console.log("Toggling modal", !isModalOpen); // Debug statement
     setIsModalOpen(!isModalOpen);
-    setSuccess(false);
-    setError("");
   };
 
   const handleSubmit = () => {
@@ -180,19 +172,14 @@ const UserPersonalDetails = ({
         if (data.status === 200 || data.status === 201) {
           setStatus(!status);
           refresAfterUpdate && refresAfterUpdate(!status);
-          Swal.fire(
-            "Success!",
-            "User details updated successfully!",
-            "success"
-          ).then(() => {
-            console.log("Closing modal"); // Debug statement
+          Swal.fire("Success!", "User details updated successfully!", "success").then(() => {
             toggleModal(); // Close modal after success
           });
         } else {
           Swal.fire("Error", "Failed to update user details", "error");
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
         Swal.fire("Error", "An error occurred. Please try again.", "error");
       });
@@ -207,11 +194,9 @@ const UserPersonalDetails = ({
       >
         <ButtonContainer>
           {mobileNumber === session?.userName && (
-            <ButtonContainer>
-              <Button onClick={toggleModal}>
-                {response ? "Update" : "Add"}
-              </Button>
-            </ButtonContainer>
+            <Button onClick={toggleModal}>
+              {response ? "Update" : "Add"}
+            </Button>
           )}
         </ButtonContainer>
         <ContentWrapper>
@@ -241,19 +226,36 @@ const UserPersonalDetails = ({
                 <InputField key={index}>
                   <Label>{field.value}</Label>
                   <Input
-                    type="text"
-                    value={updatedProfile[field.key] || ""}
-                    onChange={(e) =>
-                      handleFieldChange(field.key, e.target.value)
-                    }
-                    placeholder={
-                      field.key === "userHeight"
-                        ? "In feet"
-                        : field.key === "userWeight"
-                        ? "In kg"
-                        : ""
-                    }
-                  />
+  type="text"
+  value={updatedProfile[field.key] || ""}
+  onChange={(e) => {
+    const value = e.target.value;
+    if (field.key === "userHeight") {
+      // Allow numbers and feet/inches format
+      const regex = /^\d*'?\d*"?$/; // Updated regex to allow flexible input
+      if (regex.test(value) || value === "") {
+        handleFieldChange(field.key, value);
+      }
+    } else if (field.key === "userWeight" || field.key === "userIncome") {
+      // Allow only numbers for weight and income
+      if (/^\d*$/.test(value)) {
+        handleFieldChange(field.key, value);
+      }
+    } else {
+      handleFieldChange(field.key, value);
+    }
+  }}
+  placeholder={
+    field.key === "userHeight"
+      ? "e.g. 5'7\""
+      : field.key === "userWeight"
+      ? "In kg"
+      : field.key === "userIncome"
+      ? "e.g. 30000 (in thousands)"
+      : ""
+  }
+/>
+
                 </InputField>
               ))}
             </FormWrapper>
@@ -269,14 +271,7 @@ const UserPersonalDetails = ({
               >
                 <RingLoader color="#003566" size={60} />
               </div>
-            ) : (
-              <>
-                {success && (
-                  <Message success>Profile updated successfully!</Message>
-                )}
-                {error && <Message>{error}</Message>}
-              </>
-            )}
+            ) : null}
             <br />
             <Button onClick={handleSubmit} disabled={loading}>
               Save Changes

@@ -47,6 +47,11 @@ function Registration() {
         [name]: type === "file" ? files[0] : value,
       };
 
+      // If mobileNumber is updated, convert it to string
+      if (name === "mobileNumber") {
+        updatedData.mobileNumber = value.toString(); // Convert to string
+      }
+
       // Check if passwords match after updating
       if (updatedData.password !== updatedData.confirmPassword) {
         setPasswordError(true);
@@ -71,7 +76,6 @@ function Registration() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if all required fields are filled
     const {
       mobileNumber,
       firstName,
@@ -87,6 +91,7 @@ function Registration() {
       profileImage,
     } = formData;
 
+    // Check if all required fields are filled
     if (
       !mobileNumber ||
       !firstName ||
@@ -215,10 +220,20 @@ function Registration() {
             style={{ display: "none" }}
             id="profile-image-upload"
           />
-          <Button variant="contained" component="span" size="small">
+          <Button
+            variant="contained"
+            component="span"
+            size="small"
+            sx={{
+              mr: 2,
+            }}
+          >
             Upload Profile Image
           </Button>
         </label>
+        <Typography variant="h7" color="primary">
+          Image type is .JPG with size upto 1 mb
+        </Typography>
       </Box>
 
       <form onSubmit={handleSubmit}>
@@ -247,12 +262,20 @@ function Registration() {
             <TextField
               name="mobileNumber"
               label="Mobile Number"
+              type="number"
               fullWidth
               onChange={handleChange}
               required
               size="small"
+              inputProps={{ maxLength: 10 }} // Limit the input to 10 digits
+              onInput={(e) => {
+                if (e.target.value.length > 10) {
+                  e.target.value = e.target.value.slice(0, 10); // Prevent input exceeding 10 digits
+                }
+              }}
             />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <TextField
               name="dob"

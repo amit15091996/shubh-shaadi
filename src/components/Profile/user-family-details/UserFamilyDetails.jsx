@@ -217,19 +217,19 @@ const UserFamilyDetails = ({ response, refresAfterUpdate,setStatus,status }) => 
           <ModalContent>
             <ModalHeader>{response ? "Update Family Details" : "Add Family Details"}</ModalHeader>
             <FormWrapper>
-              {familyFields.map((field, index) => (
-                <InputField key={index}>
-                  <Label>{field.value}</Label>
-                  <Input
-                    type="text"
-                    value={updatedProfile[field.key] || ""}
-                    onChange={(e) =>
-                      handleFieldChange(field.key, e.target.value)
-                    }
-                  />
-                </InputField>
-              ))}
-            </FormWrapper>
+  {familyFields.map((field, index) => (
+    <InputField key={index}>
+      <Label>{field.value}</Label>
+      <Input
+        type={field.key.includes("noOf") ? "number" : "text"} // Change input type based on field key
+        value={updatedProfile[field.key] || ""}
+        onChange={(e) => handleFieldChange(field.key, e.target.value)}
+        min={0} // Optional: Prevent negative numbers
+      />
+    </InputField>
+  ))}
+</FormWrapper>
+
             {loading ? (
               <div
                 style={{

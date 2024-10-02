@@ -32,11 +32,13 @@ export const getProfileImage = async (mobileNumber) => {
   try {
     const response = await axios.get(`${BASE_URL}/profile-image`, {
       params: { mobileNumber },
-      responseType: 'blob' // Necessary for binary data
+      responseType: 'blob', // Necessary for binary data
     });
-    return URL.createObjectURL(response.data);
+
+    const imageUrl = URL.createObjectURL(response.data);
+    return { imageUrl, status: response.status }; // Return both the image URL and status code
   } catch (error) {
     console.error('Error fetching profile image:', error);
-    throw error;
+    throw error; // You can also handle specific status codes here if needed
   }
 };

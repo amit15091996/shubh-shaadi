@@ -35,7 +35,7 @@ function Login() {
       const response = await AxiosConfig.get("/auth/login-profile", {
         params: formData,
       });
-      if (response?.data?.statusCode == 200) {
+      if (response?.data?.statusCode === 200) {
         localStorage.setItem("userInfo", JSON.stringify(response.data));
 
         // Show SweetAlert success notification
@@ -57,7 +57,6 @@ function Login() {
         });
         setLoading(false);
       }
-      // Save JWT and handle successful login
     } catch (error) {
       console.error("Login failed", error);
       setLoading(false); // Stop loading in case of error
@@ -79,16 +78,19 @@ function Login() {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#e0e0e0", // Optional: Background color for the entire page
+        background:
+          "url('/path/to/your/background/image.jpg') no-repeat center center fixed",
+        backgroundSize: "cover",
       }}
     >
       <Container
         maxWidth="xs"
         sx={{
-          backgroundColor: "#f8f9fa",
+          backdropFilter: "blur(10px)",
+          backgroundColor: "rgba(255, 255, 255, 0.3)", // Semi-transparent background
           padding: "2rem",
-          borderRadius: "8px",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          borderRadius: "12px",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -106,7 +108,7 @@ function Login() {
           gutterBottom
           sx={{ textAlign: "center", mb: 2, color: "#001d4a" }}
         >
-          Login To Procced
+          Login To Proceed
         </Typography>
 
         {/* Show loading spinner if loading is true */}
@@ -131,6 +133,27 @@ function Login() {
               onChange={handleChange}
               fullWidth
               required
+              sx={{
+                backgroundColor: "rgba(255, 255, 255, 0.7)", // Light background for input
+                borderRadius: "8px",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(0, 0, 0, 0.5)", // Border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#001d4a", // Border color on hover
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#001d4a", // Border color when focused
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#001d4a", // Label color
+                  "&.Mui-focused": {
+                    color: "#001d4a", // Focused label color
+                  },
+                },
+              }}
             />
             <TextField
               variant="outlined"
@@ -141,6 +164,27 @@ function Login() {
               onChange={handleChange}
               fullWidth
               required
+              sx={{
+                backgroundColor: "rgba(255, 255, 255, 0.7)", // Light background for input
+                borderRadius: "8px",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(0, 0, 0, 0.5)", // Border color
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#001d4a", // Border color on hover
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#001d4a", // Border color when focused
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#001d4a", // Label color
+                  "&.Mui-focused": {
+                    color: "#001d4a", // Focused label color
+                  },
+                },
+              }}
             />
             <Button
               variant="contained"
@@ -155,16 +199,29 @@ function Login() {
 
         <Typography
           variant="body2"
-          sx={{ mt: 2, textAlign: "center", color: "#888" }}
+          sx={{
+            mt: 2,
+            textAlign: "center",
+            color: "white",
+            fontWeight: "bold", // Make the text bold
+            letterSpacing: "0.5px", // Add some letter spacing
+          }}
         >
-          Don't have an account? <Link to="/register">Register here</Link>
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            style={{
+              color: "blue", // A contrasting color for the link
+              textDecoration: "underline", // Underline the link
+              fontWeight: "bold", // Bold link
+              transition: "color 0.3s", // Smooth transition for hover effect
+            }}
+            // onMouseEnter={(e) => (e.target.style.color = "#ffd700")} // Change color on hover
+            // onMouseLeave={(e) => (e.target.style.color = "#ffcc00")} // Reset color on mouse leave
+          >
+            Register here
+          </Link>
         </Typography>
-        {/* <Typography
-          variant="body2"
-          sx={{ mt: 2, textAlign: "center", color: "#888" }}
-        >
-          Forgot password <Link to="/forgot-password"> Click here</Link>
-        </Typography> */}
       </Container>
     </Box>
   );

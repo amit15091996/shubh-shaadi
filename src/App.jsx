@@ -24,7 +24,7 @@ const AppContent = () => {
   const isLandingPage = location.pathname === "/";
   const isRegisterPage = location.pathname === "/register";
   const isLoginPage = location.pathname === "/login";
-
+  console.log(location.pathname);
   return (
     <Card>
       <Box
@@ -38,11 +38,10 @@ const AppContent = () => {
               : "#001d4a",
           backgroundImage:
             isLandingPage || isRegisterPage || isLoginPage
-              ? // isLandingPage  || isLoginPage
-                `url(${landingImage})` // Corrected usage of template literal
+              ? `url(${landingImage})`
               : "none",
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "center -17%", // Adjusted to move the image down
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
           maxWidth: "100%",

@@ -15,12 +15,14 @@ import { useNavigate } from "react-router-dom";
 
 const CardContainer = styled(motion.div)`
   display: flex;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   max-width: 100%;
-  background-color: #fff;
+  background: rgba(255, 255, 255, 0.5); /* Lighter semi-transparent background */
+  backdrop-filter: blur(10px); /* Backdrop blur effect */
 `;
+
 
 const ContentWrapper = styled.div`
   flex: 2;
@@ -74,6 +76,8 @@ const LandingPage = () => {
         justifyContent: "center",
         alignItems: "center",
         paddingTop: "400px",
+        background: "url('/path/to/your/background/image.jpg') no-repeat center center fixed",
+        backgroundSize: "cover",
       }}
     >
       <Box sx={{ width: "80%" }}>
@@ -88,9 +92,7 @@ const LandingPage = () => {
                 <ContentWrapper>
                   <FormFieldWrapper>
                     <FormControl fullWidth>
-                      <InputLabel id="gender-label">
-                        I'm looking for a
-                      </InputLabel>
+                      <InputLabel id="gender-label">I'm looking for a</InputLabel>
                       <Select
                         labelId="gender-label"
                         value={gender}
@@ -167,9 +169,7 @@ const LandingPage = () => {
 
                   <FormFieldWrapper>
                     <FormControl fullWidth>
-                      <InputLabel id="mothertongue-label">
-                        Mother Tongue
-                      </InputLabel>
+                      <InputLabel id="mothertongue-label">Mother Tongue</InputLabel>
                       <Select
                         labelId="mothertongue-label"
                         value={motherTongue}
@@ -208,9 +208,7 @@ const LandingPage = () => {
                         <MenuItem value="Garhwali">Garhwali</MenuItem>
                         <MenuItem value="Garo">Garo</MenuItem>
                         <MenuItem value="Haryanavi">Haryanavi</MenuItem>
-                        <MenuItem value="Himachali/Pahari">
-                          Himachali/Pahari
-                        </MenuItem>
+                        <MenuItem value="Himachali/Pahari">Himachali/Pahari</MenuItem>
                         <MenuItem value="Hindko">Hindko</MenuItem>
                         <MenuItem value="Kakbarak">Kakbarak</MenuItem>
                         <MenuItem value="Kanauji">Kanauji</MenuItem>
@@ -219,51 +217,34 @@ const LandingPage = () => {
                         <MenuItem value="Khasi">Khasi</MenuItem>
                         <MenuItem value="Konkani">Konkani</MenuItem>
                         <MenuItem value="Koshali">Koshali</MenuItem>
-                        <MenuItem value="Kumaoni">Kumaoni</MenuItem>
-                        <MenuItem value="Kutchi">Kutchi</MenuItem>
-                        <MenuItem value="Ladakhi">Ladakhi</MenuItem>
-                        <MenuItem value="Lepcha">Lepcha</MenuItem>
-                        <MenuItem value="Magahi">Magahi</MenuItem>
                         <MenuItem value="Maithili">Maithili</MenuItem>
-                        <MenuItem value="Malay">Malay</MenuItem>
-                        <MenuItem value="Malayalam">Malayalam</MenuItem>
-                        <MenuItem value="Manipuri">Manipuri</MenuItem>
-                        <MenuItem value="Miji">Miji</MenuItem>
                         <MenuItem value="Mizo">Mizo</MenuItem>
-                        <MenuItem value="Monpa">Monpa</MenuItem>
                         <MenuItem value="Nepali">Nepali</MenuItem>
-                        <MenuItem value="Pashto">Pashto</MenuItem>
-                        <MenuItem value="Persian">Persian</MenuItem>
+                        <MenuItem value="Pahari">Pahari</MenuItem>
                         <MenuItem value="Rajasthani">Rajasthani</MenuItem>
-                        <MenuItem value="Russian">Russian</MenuItem>
-                        <MenuItem value="Sanskrit">Sanskrit</MenuItem>
+                        <MenuItem value="Sambalpuri">Sambalpuri</MenuItem>
                         <MenuItem value="Santhali">Santhali</MenuItem>
-                        <MenuItem value="Seraiki">Seraiki</MenuItem>
                         <MenuItem value="Sindhi">Sindhi</MenuItem>
-                        <MenuItem value="Sinhala">Sinhala</MenuItem>
-                        <MenuItem value="Sourashtra">Sourashtra</MenuItem>
-                        <MenuItem value="Spanish">Spanish</MenuItem>
-                        <MenuItem value="Swedish">Swedish</MenuItem>
-                        <MenuItem value="Tagalog">Tagalog</MenuItem>
-                        <MenuItem value="Tulu">Tulu</MenuItem>
-                        <MenuItem value="Other">Other</MenuItem>
+                        <MenuItem value="Tibetan">Tibetan</MenuItem>
+                        <MenuItem value="Urdu">Urdu</MenuItem>
                       </Select>
                     </FormControl>
                   </FormFieldWrapper>
 
                   <FormFieldWrapper>
-                    {loading ? (
-                      <CircularProgress />
-                    ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        onClick={handleBeginClick}
-                      >
-                        Let's Begin
-                      </Button>
-                    )}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleBeginClick}
+                      disabled={loading}
+                      size="large"
+                    >
+                      {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        "Let's Begin"
+                      )}
+                    </Button>
                   </FormFieldWrapper>
                 </ContentWrapper>
               </CardContainer>

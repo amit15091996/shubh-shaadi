@@ -154,7 +154,7 @@ const FramerCard = () => {
 
       await Promise.all(
         mobileNumbers.map(async (number) => {
-          const imageUrl = await getProfileImage(number);
+          const { imageUrl, status }= await getProfileImage(number);
           images[number] = imageUrl;
         })
       );
