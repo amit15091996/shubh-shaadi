@@ -26,6 +26,7 @@ const ContentWrapper = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr;
   gap: 15px;
+  align-items: start; /* Align items to the start */
 `;
 
 const Field = styled.div`
@@ -33,6 +34,14 @@ const Field = styled.div`
   border-radius: 4px;
   color: #1f7a8c;
   font-size: 20px;
+  max-height: 60px; /* Set a max height */
+  overflow-y: auto; /* Allow vertical scrolling */
+  word-wrap: break-word; /* Allow words to break */
+`;
+
+const ResidenceField = styled(Field)`
+  max-height: 120px; /* Increase max height for the residence field */
+  overflow: auto; /* Allow scrolling */
 `;
 
 const ButtonContainer = styled.div`
@@ -134,12 +143,7 @@ export const fields = [
 ];
 
 // Main Component
-const PrimaryUserDetails = ({
-  response,
-  refresAfterUpdate,
-  setStatus,
-  status,
-}) => {
+const PrimaryUserDetails = ({ response, refresAfterUpdate, setStatus, status }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
@@ -228,16 +232,27 @@ const PrimaryUserDetails = ({
 
         <ContentWrapper>
           {fields.map((field, index) => (
-            <Field key={index}>
-              <strong>{field.label}:</strong>{" "}
-              <span style={{ color: "#003566" }}>
-                {response && response[field.key] !== undefined
-                  ? Array.isArray(response[field.key])
-                    ? response[field.key].join(", ")
-                    : response[field.key]
-                  : "N/A"}
-              </span>
-            </Field>
+            field.key === "residence" ? (
+              <ResidenceField key={index}>
+                <strong>{field.label}:</strong>{" "}
+                <span style={{ color: "#003566" }}>
+                  {response && response[field.key] !== undefined
+                    ? response[field.key]
+                    : "N/A"}
+                </span>
+              </ResidenceField>
+            ) : (
+              <Field key={index}>
+                <strong>{field.label}:</strong>{" "}
+                <span style={{ color: "#003566" }}>
+                  {response && response[field.key] !== undefined
+                    ? Array.isArray(response[field.key])
+                      ? response[field.key].join(", ")
+                      : response[field.key]
+                    : "N/A"}
+                </span>
+              </Field>
+            )
           ))}
         </ContentWrapper>
       </CardContainer>
@@ -252,12 +267,10 @@ const PrimaryUserDetails = ({
                   <Label>{field.label}</Label>
                   {field.key === "dob" ? (
                     <TextField
-                    size="small"
+                      size="small"
                       type="date"
                       value={updatedProfile[field.key] || ""}
-                      onChange={(e) =>
-                        handleFieldChange(field.key, e.target.value)
-                      }
+                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
                       fullWidth
                       InputLabelProps={{ shrink: true }}
                     />
@@ -265,9 +278,7 @@ const PrimaryUserDetails = ({
                     <FormControl fullWidth size="small">
                       <StyledSelect
                         value={updatedProfile[field.key] || ""}
-                        onChange={(e) =>
-                          handleFieldChange(field.key, e.target.value)
-                        }
+                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
                         size="small"
                       >
                         {field.key === "religion" && [
@@ -294,9 +305,7 @@ const PrimaryUserDetails = ({
                     <Input
                       type={field.key === "age" ? "number" : "text"}
                       value={updatedProfile[field.key] || ""}
-                      onChange={(e) =>
-                        handleFieldChange(field.key, e.target.value)
-                      }
+                      onChange={(e) => handleFieldChange(field.key, e.target.value)}
                       disabled={field.isDisabled}
                     />
                   )}
