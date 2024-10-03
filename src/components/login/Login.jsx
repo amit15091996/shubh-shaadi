@@ -222,6 +222,31 @@ function Login() {
             Register here
           </Link>
         </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            mt: 2,
+            textAlign: "center",
+            color: "white",
+            fontWeight: "bold", // Make the text bold
+            letterSpacing: "0.5px", // Add some letter spacing
+          }}
+        >
+          Forgot Password?{" "}
+          <Link
+            to="/forgot-password"
+            style={{
+              color: "blue", // A contrasting color for the link
+              textDecoration: "underline", // Underline the link
+              fontWeight: "bold", // Bold link
+              transition: "color 0.3s", // Smooth transition for hover effect
+            }}
+            // onMouseEnter={(e) => (e.target.style.color = "#ffd700")} // Change color on hover
+            // onMouseLeave={(e) => (e.target.style.color = "#ffcc00")} // Reset color on mouse leave
+          >
+            Click here
+          </Link>
+        </Typography>
       </Container>
     </Box>
   );

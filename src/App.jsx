@@ -22,6 +22,7 @@ const AppContent = () => {
   const isLandingPage = location.pathname === "/";
   const isRegisterPage = location.pathname === "/register";
   const isLoginPage = location.pathname === "/login";
+  const isForgotPage = location.pathname === "/forgot-password";
   console.log(location.pathname);
   return (
     <Card>
@@ -31,11 +32,11 @@ const AppContent = () => {
           width: "100vw", // Set to full viewport width
           overflow: "auto",
           backgroundColor:
-            isLandingPage || isRegisterPage || isLoginPage
+            isLandingPage || isRegisterPage || isLoginPage || isForgotPage
               ? "transparent"
               : "#001d4a",
           backgroundImage:
-            isLandingPage || isRegisterPage || isLoginPage
+            isLandingPage || isRegisterPage || isLoginPage || isForgotPage
               ? `url(${landingImage})`
               : "none",
           backgroundSize: "cover",

@@ -29,15 +29,16 @@ function Registration() {
     community: "",
     dob: "",
     residence: "",
+    email: "", // Keep email field in state
     profileImage: null,
   });
 
-  const [loading, setLoading] = useState(false); // Loading state
-  const [showPassword, setShowPassword] = useState(false); // Password visibility toggle
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Confirm password visibility toggle
-  const [passwordError, setPasswordError] = useState(false); // Password mismatch error state
-  const [imagePreview, setImagePreview] = useState(null); // Image preview state
-  const navigate = useNavigate(); // Navigation hook
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -47,12 +48,10 @@ function Registration() {
         [name]: type === "file" ? files[0] : value,
       };
 
-      // If mobileNumber is updated, convert it to string
       if (name === "mobileNumber") {
-        updatedData.mobileNumber = value.toString(); // Convert to string
+        updatedData.mobileNumber = value.toString();
       }
 
-      // Check if passwords match after updating
       if (updatedData.password !== updatedData.confirmPassword) {
         setPasswordError(true);
       } else {
@@ -62,7 +61,6 @@ function Registration() {
       return updatedData;
     });
 
-    // Set image preview if a file is uploaded
     if (type === "file") {
       const file = files[0];
       if (file) {
@@ -88,10 +86,10 @@ function Registration() {
       community,
       dob,
       residence,
+      email, // Keep email for validation
       profileImage,
     } = formData;
 
-    // Check if all required fields are filled
     if (
       !mobileNumber ||
       !firstName ||
@@ -104,6 +102,7 @@ function Registration() {
       !community ||
       !dob ||
       !residence ||
+      !email || // Check for email
       !profileImage
     ) {
       Swal.fire({
@@ -115,7 +114,6 @@ function Registration() {
       return;
     }
 
-    // Validate mobile number
     const mobileNumberPattern = /^[0-9]{10}$/;
     if (!mobileNumberPattern.test(mobileNumber)) {
       Swal.fire({
@@ -127,7 +125,17 @@ function Registration() {
       return;
     }
 
-    // Check if passwords match
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please enter a valid email address.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       setPasswordError(true);
       Swal.fire({
@@ -139,10 +147,11 @@ function Registration() {
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
     const formDataToSend = new FormData();
     for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
+      // Map email to userMailId in the form data sent to the backend
+      formDataToSend.append(key === "email" ? "userMailId" : key, formData[key]);
     }
 
     try {
@@ -150,9 +159,8 @@ function Registration() {
         "https://shaadi-be.fino-web-app.agency/api/v1/auth/create-profile",
         formDataToSend
       );
-      setLoading(false); // Stop loading
+      setLoading(false);
 
-      // Display SweetAlert on success
       Swal.fire({
         title: "Success!",
         text: "Profile creation successful!",
@@ -200,7 +208,7 @@ function Registration() {
       >
         <Box
           component="img"
-          src={imagePreview || "https://via.placeholder.com/80"} // Placeholder image if no preview
+          src={imagePreview || "https://via.placeholder.com/80"}
           alt="Profile Preview"
           sx={{
             width: "80px",
@@ -232,7 +240,7 @@ function Registration() {
           </Button>
         </label>
         <Typography variant="h7" color="primary">
-          Image type is .JPG with size upto 1 mb
+          Image type is .JPG with size up to 1 mb
         </Typography>
       </Box>
 
@@ -267,15 +275,14 @@ function Registration() {
               onChange={handleChange}
               required
               size="small"
-              inputProps={{ maxLength: 10 }} // Limit the input to 10 digits
+              inputProps={{ maxLength: 10 }}
               onInput={(e) => {
                 if (e.target.value.length > 10) {
-                  e.target.value = e.target.value.slice(0, 10); // Prevent input exceeding 10 digits
+                  e.target.value = e.target.value.slice(0, 10);
                 }
               }}
             />
           </Grid>
-
           <Grid item xs={12} sm={6}>
             <TextField
               name="dob"
@@ -361,6 +368,17 @@ function Registration() {
             <TextField
               name="residence"
               label="Residence"
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="email" // Keep the email field as is
+              label="Email"
+              type="email"
               fullWidth
               onChange={handleChange}
               required
