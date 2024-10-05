@@ -191,14 +191,12 @@ function Registration() {
         borderRadius: 2,
         display: "flex",
         flexDirection: "column",
-        height: "90vh", // Overall container height
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom align="center">
         User Registration
       </Typography>
 
-      {/* Profile Image Upload Section */}
       <Box
         sx={{
           display: "flex",
@@ -233,9 +231,7 @@ function Registration() {
             variant="contained"
             component="span"
             size="small"
-            sx={{
-              mr: 2,
-            }}
+            sx={{ mr: 2 }}
           >
             Upload Profile Image
           </Button>
@@ -245,12 +241,13 @@ function Registration() {
         </Typography>
       </Box>
 
-      {/* Scrollable Form Section */}
       <Box
         sx={{
+          overflowY: "auto",
+          maxHeight: "70vh",
+          display: "flex",
+          flexDirection: "column",
           flexGrow: 1,
-          overflowY: "auto", // Make the form scrollable
-          maxHeight: { xs: "55vh", md: "70vh" }, // Adjust height for mobile
         }}
       >
         <form onSubmit={handleSubmit}>
@@ -344,34 +341,19 @@ function Registration() {
                   <MenuItem value="Hindu">Hindu</MenuItem>
                   <MenuItem value="Muslim">Muslim</MenuItem>
                   <MenuItem value="Christian">Christian</MenuItem>
-                  <MenuItem value="Sikh">Sikh</MenuItem>
-                  <MenuItem value="Parsi">Parsi</MenuItem>
-                  <MenuItem value="Jain">Jain</MenuItem>
-                  <MenuItem value="Buddhist">Buddhist</MenuItem>
-                  <MenuItem value="Jewish">Jewish</MenuItem>
-                  <MenuItem value="No Religion">No Religion</MenuItem>
-                  <MenuItem value="Spiritual - not religious">Spiritual</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
+                  <MenuItem value="Others">Others</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="community-select-label">Community</InputLabel>
-                <Select
-                  name="community"
-                  value={formData.community}
-                  onChange={handleChange}
-                  required
-                  label="Community"
-                >
-                  <MenuItem value="English">English</MenuItem>
-                  <MenuItem value="Hindi">Hindi</MenuItem>
-                  <MenuItem value="Urdu">Urdu</MenuItem>
-                  <MenuItem value="Telugu">Telugu</MenuItem>
-                  <MenuItem value="Tamil">Tamil</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                name="community"
+                label="Community"
+                fullWidth
+                onChange={handleChange}
+                required
+                size="small"
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -420,26 +402,25 @@ function Registration() {
                 fullWidth
                 onChange={handleChange}
                 required
-                error={passwordError}
-                helperText={passwordError ? "Passwords do not match." : ""}
                 size="small"
                 InputProps={{
                   endAdornment: (
-                    <Button
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      size="small"
-                    >
+                    <Button onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                       {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </Button>
                   ),
                 }}
               />
+              {passwordError && (
+                <Typography color="error" variant="caption">
+                  Passwords do not match
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </form>
       </Box>
 
-      {/* Submit Button */}
       <Grid item xs={12} mt={2}>
         <Button
           type="submit"

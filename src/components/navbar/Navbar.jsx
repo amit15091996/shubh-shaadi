@@ -158,7 +158,7 @@ function Navbar() {
             variant="h6"
             sx={{
               flexGrow: 1,
-              fontFamily: "'Lobster', cursive",
+              fontFamily: "serif",
               fontWeight: "bold",
               fontSize: { xs: "1.5rem", md: "2rem" }, // Responsive font size
               color: "#f50057",
@@ -170,7 +170,7 @@ function Navbar() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Shubh Shaadi
+            Marriage Harmony
           </Typography>
 
           {isMobile ? (
