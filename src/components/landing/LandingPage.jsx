@@ -19,10 +19,9 @@ const CardContainer = styled(motion.div)`
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   max-width: 100%;
-  background: rgba(255, 255, 255, 0.5); /* Lighter semi-transparent background */
-  backdrop-filter: blur(10px); /* Backdrop blur effect */
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
 `;
-
 
 const ContentWrapper = styled.div`
   flex: 2;
@@ -32,11 +31,20 @@ const ContentWrapper = styled.div`
   flex-wrap: wrap;
   gap: 15px;
   align-items: center;
+
+  @media (max-width: 600px) {
+    flex-direction: column; /* Stack items on small screens */
+    align-items: stretch; /* Align items to stretch to full width */
+  }
 `;
 
 const FormFieldWrapper = styled.div`
   flex: 1;
   min-width: 150px;
+
+  @media (max-width: 600px) {
+    min-width: 100%; /* Full width on small screens */
+  }
 `;
 
 const LandingPage = () => {
@@ -75,14 +83,14 @@ const LandingPage = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        paddingTop: "400px",
+        paddingTop: { xs: "100px", md: "400px" }, // Adjust padding for mobile
         background: "url('/path/to/your/background/image.jpg') no-repeat center center fixed",
         backgroundSize: "cover",
       }}
     >
-      <Box sx={{ width: "80%" }}>
+      <Box sx={{ width: { xs: "90%", sm: "80%", md: "80%" } }}>
         <Grid container>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12}>
             <Box sx={{ padding: 2, height: "100%" }}>
               <CardContainer
                 initial={{ opacity: 0, x: -100 }}
@@ -188,7 +196,6 @@ const LandingPage = () => {
                         <MenuItem value="Tamil">Tamil</MenuItem>
                         <MenuItem value="Telugu">Telugu</MenuItem>
                         <MenuItem value="Urdu">Urdu</MenuItem>
-
                         <MenuItem value="Aka">Aka</MenuItem>
                         <MenuItem value="Arabic">Arabic</MenuItem>
                         <MenuItem value="Arunachali">Arunachali</MenuItem>
@@ -238,6 +245,7 @@ const LandingPage = () => {
                       onClick={handleBeginClick}
                       disabled={loading}
                       size="large"
+                      fullWidth
                     >
                       {loading ? (
                         <CircularProgress size={24} color="inherit" />

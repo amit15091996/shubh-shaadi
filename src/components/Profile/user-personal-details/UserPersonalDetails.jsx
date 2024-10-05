@@ -16,15 +16,27 @@ const CardContainer = styled(motion.div)`
   max-width: 100%;
   background-color: #fcd5ce;
   max-height: 350px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const ContentWrapper = styled.div`
   flex: 2;
   padding: 30px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto 1fr;
   gap: 15px;
+  max-height: 300px; /* Limit height to allow scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Stack items on smaller screens */
+    padding: 15px;
+    max-height: 200px; /* Adjust max-height for mobile */
+  }
 `;
 
 const Field = styled.div`
@@ -32,12 +44,25 @@ const Field = styled.div`
   border-radius: 4px;
   color: #1f7a8c;
   font-size: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 16px; /* Smaller font size on mobile */
+  }
 `;
 
 const ButtonContainer = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
+  display: flex;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    position: static; /* Remove absolute positioning on mobile */
+    flex-direction: row; /* Ensure buttons are in a row */
+    justify-content: space-between; /* Space out buttons */
+    margin-top: 10px; /* Add some margin for spacing */
+  }
 `;
 
 const Button = styled.button`
@@ -48,8 +73,14 @@ const Button = styled.button`
   border-radius: 4px;
   font-size: 18px;
   cursor: pointer;
+
   &:hover {
     background-color: #1f7a8c;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%; /* Full width on mobile */
+    margin-bottom: 10px; /* Space between stacked buttons */
   }
 `;
 
@@ -69,8 +100,12 @@ const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 800px;
+  width: 90%; /* Responsive width */
+  max-width: 800px; /* Maximum width for larger screens */
+  max-height: 80vh; /* Limit modal height */
+  overflow-y: auto; /* Enable vertical scrolling for content */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative; /* Allow absolute positioning of buttons */
 `;
 
 const ModalHeader = styled.h2`
@@ -82,6 +117,10 @@ const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Single column on mobile */
+  }
 `;
 
 const InputField = styled.div`
@@ -99,12 +138,10 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-`;
 
-const Message = styled.div`
-  margin-top: 15px;
-  font-size: 16px;
-  color: ${({ success }) => (success ? "green" : "red")};
+  @media (max-width: 768px) {
+    font-size: 14px; /* Smaller font size on mobile */
+  }
 `;
 
 // Personal Fields
@@ -221,41 +258,41 @@ const UserPersonalDetails = ({
             <ModalHeader>
               {response ? "Update Profile" : "Add Profile"}
             </ModalHeader>
+            <ButtonContainer>
+              <Button onClick={toggleModal}>Close</Button>
+            </ButtonContainer>
             <FormWrapper>
               {personalFields.map((field, index) => (
                 <InputField key={index}>
                   <Label>{field.value}</Label>
                   <Input
-  type="text"
-  value={updatedProfile[field.key] || ""}
-  onChange={(e) => {
-    const value = e.target.value;
-    if (field.key === "userHeight") {
-      // Allow numbers and feet/inches format
-      const regex = /^\d*'?\d*"?$/; // Updated regex to allow flexible input
-      if (regex.test(value) || value === "") {
-        handleFieldChange(field.key, value);
-      }
-    } else if (field.key === "userWeight" || field.key === "userIncome") {
-      // Allow only numbers for weight and income
-      if (/^\d*$/.test(value)) {
-        handleFieldChange(field.key, value);
-      }
-    } else {
-      handleFieldChange(field.key, value);
-    }
-  }}
-  placeholder={
-    field.key === "userHeight"
-      ? "e.g. 5'7\""
-      : field.key === "userWeight"
-      ? "In kg"
-      : field.key === "userIncome"
-      ? "e.g. 30000 (in thousands)"
-      : ""
-  }
-/>
-
+                    type="text"
+                    value={updatedProfile[field.key] || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (field.key === "userHeight") {
+                        const regex = /^\d*'?\d*"?$/; // Updated regex to allow flexible input
+                        if (regex.test(value) || value === "") {
+                          handleFieldChange(field.key, value);
+                        }
+                      } else if (field.key === "userWeight" || field.key === "userIncome") {
+                        if (/^\d*$/.test(value)) {
+                          handleFieldChange(field.key, value);
+                        }
+                      } else {
+                        handleFieldChange(field.key, value);
+                      }
+                    }}
+                    placeholder={
+                      field.key === "userHeight"
+                        ? "e.g. 5'7\""
+                        : field.key === "userWeight"
+                        ? "In kg"
+                        : field.key === "userIncome"
+                        ? "e.g. 30000 (in thousands)"
+                        : ""
+                    }
+                  />
                 </InputField>
               ))}
             </FormWrapper>
@@ -272,17 +309,15 @@ const UserPersonalDetails = ({
                 <RingLoader color="#003566" size={60} />
               </div>
             ) : null}
-            <br />
-            <Button onClick={handleSubmit} disabled={loading}>
-              Save Changes
-            </Button>
-            <Button
-              onClick={toggleModal}
-              style={{ marginLeft: "10px" }}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
+
+<ButtonContainer>
+  <Button onClick={handleSubmit} disabled={loading} style={{ flex: 1 }}>
+    Save Changes
+  </Button>
+  <Button onClick={toggleModal} disabled={loading} style={{ flex: 1 }}>
+    Cancel
+  </Button>
+</ButtonContainer>
           </ModalContent>
         </ModalOverlay>
       )}

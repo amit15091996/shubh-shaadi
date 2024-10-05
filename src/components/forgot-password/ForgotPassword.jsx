@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import qs from "qs"; // Import qs for URL encoding
 import { AxiosConfig } from "../../config/AxiosConfig"; // Adjust the path as needed
 import Swal from "sweetalert2"; // Import SweetAlert
 
@@ -44,7 +45,16 @@ const ForgotPassword = () => {
     };
 
     try {
-      const response = await AxiosConfig.post("/user/forgot-password", formattedData);
+      const response = await AxiosConfig.post(
+        "/user/forgot-password",
+        qs.stringify(formattedData), // Stringify the data
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+
       if (response.data.statusCode === 200) {
         Swal.fire({
           title: "Success!",
@@ -65,7 +75,7 @@ const ForgotPassword = () => {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error sending reset email", error);
+      console.error("Error sending reset email", error.response || error);
       setLoading(false);
       Swal.fire({
         title: "Error",
@@ -92,7 +102,7 @@ const ForgotPassword = () => {
         maxWidth="xs"
         sx={{
           backdropFilter: "blur(10px)",
-          backgroundColor: "rgba(255, 255, 255, 0.3)", // Semi-transparent background
+          backgroundColor: "rgba(255, 255, 255, 0.3)",
           padding: "2rem",
           borderRadius: "12px",
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
@@ -132,23 +142,23 @@ const ForgotPassword = () => {
               fullWidth
               required
               sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.7)", // Light background for input
+                backgroundColor: "rgba(255, 255, 255, 0.7)",
                 borderRadius: "8px",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
-                    borderColor: "rgba(0, 0, 0, 0.5)", // Border color
+                    borderColor: "rgba(0, 0, 0, 0.5)",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#001d4a", // Border color on hover
+                    borderColor: "#001d4a",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#001d4a", // Border color when focused
+                    borderColor: "#001d4a",
                   },
                 },
                 "& .MuiInputLabel-root": {
-                  color: "#001d4a", // Label color
+                  color: "#001d4a",
                   "&.Mui-focused": {
-                    color: "#001d4a", // Focused label color
+                    color: "#001d4a",
                   },
                 },
               }}
@@ -163,26 +173,26 @@ const ForgotPassword = () => {
               fullWidth
               required
               InputLabelProps={{
-                shrink: true, // Ensures the label stays above the input when there is a value
+                shrink: true,
               }}
               sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.7)", // Light background for input
+                backgroundColor: "rgba(255, 255, 255, 0.7)",
                 borderRadius: "8px",
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
-                    borderColor: "rgba(0, 0, 0, 0.5)", // Border color
+                    borderColor: "rgba(0, 0, 0, 0.5)",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#001d4a", // Border color on hover
+                    borderColor: "#001d4a",
                   },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#001d4a", // Border color when focused
+                    borderColor: "#001d4a",
                   },
                 },
                 "& .MuiInputLabel-root": {
-                  color: "#001d4a", // Label color
+                  color: "#001d4a",
                   "&.Mui-focused": {
-                    color: "#001d4a", // Focused label color
+                    color: "#001d4a",
                   },
                 },
               }}

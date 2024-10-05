@@ -15,15 +15,27 @@ const CardContainer = styled(motion.div)`
   max-width: 100%;
   background-color: #fcd5ce;
   max-height: 350px;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* Stack items on smaller screens */
+  }
 `;
 
 const ContentWrapper = styled.div`
   flex: 2;
   padding: 30px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto 1fr;
   gap: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 15px;
+    max-height: 200px;
+  }
 `;
 
 const Field = styled.div`
@@ -31,12 +43,24 @@ const Field = styled.div`
   border-radius: 4px;
   color: #1f7a8c;
   font-size: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const ButtonContainer = styled.div`
-  position: absolute;
+  position: absolute; /* Positioning it absolutely within CardContainer */
   top: 20px;
   right: 20px;
+  display: flex; /* Align buttons in a row */
+  
+  @media (max-width: 768px) {
+    position: absolute; /* Keep it absolute for mobile */
+    top: 10px; /* Adjust top position for mobile */
+    right: 10px; /* Adjust right position for mobile */
+    margin: 0; /* Remove margin for mobile */
+  }
 `;
 
 const Button = styled.button`
@@ -47,30 +71,43 @@ const Button = styled.button`
   border-radius: 4px;
   font-size: 18px;
   cursor: pointer;
+  margin-left: 10px; /* Spacing between buttons */
+
+  &:first-child {
+    margin-left: 0; /* Remove margin for the first button */
+  }
+
   &:hover {
     background-color: #1f7a8c;
   }
+
+  @media (max-width: 768px) {
+    width: auto; /* Auto width for buttons */
+    margin-left: 0; /* Remove left margin on mobile */
+    margin-bottom: 10px; /* Add bottom margin for spacing if needed */
+  }
 `;
+
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7); /* Darker background for modal */
   display: flex;
   justify-content: center;
   align-items: center;
-  // z-index: 9999; /* Ensure the overlay is on top */
+  z-index: 1000; /* Ensure the modal is on top of all content */
 `;
 
 const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 800px;
+  width: 90%;
+  max-width: 800px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  // z-index: 10000; /* Ensure the content is on top of the overlay */
 `;
 
 const ModalHeader = styled.h2`
@@ -80,8 +117,12 @@ const ModalHeader = styled.h2`
 
 const FormWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Adjusted for 3 columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 15px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Single column on mobile */
+  }
 `;
 
 const InputField = styled.div`
@@ -99,6 +140,10 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px; /* Smaller font size on mobile */
+  }
 `;
 
 const Message = styled.div`
@@ -107,6 +152,7 @@ const Message = styled.div`
   color: ${({ success }) => (success ? "green" : "red")};
 `;
 
+// Fields data
 export const lifeStyleAndEducationFields = [
   { key: "userOccupation", value: "Occupation: " },
   { key: "userCurrentLoc", value: "Current Location: " },
@@ -123,7 +169,6 @@ const UserLifeStyleAndEducation = ({
   status,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [status, setStatus] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -167,18 +212,14 @@ const UserLifeStyleAndEducation = ({
         if (data.status === 200 || data.status === 201) {
           setStatus(!status);
           refresAfterUpdate && refresAfterUpdate(!status);
-          Swal.fire(
-            "Success!",
-            "User details updated successfully!",
-            "success"
-          ).then(() => {
+          Swal.fire("Success!", "User details updated successfully!", "success").then(() => {
             toggleModal(); // Close modal after success
           });
         } else {
           Swal.fire("Error", "Failed to update user details", "error");
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
         Swal.fire("Error", "An error occurred. Please try again.", "error");
       });
@@ -199,11 +240,11 @@ const UserLifeStyleAndEducation = ({
         <ContentWrapper>
           {lifeStyleAndEducationFields.map((field, index) => (
             <Field key={index}>
-              {field.value}
+              {field.value}{" "}
               <span style={{ color: "#003566" }}>
                 {response && response[field.key]
                   ? Array.isArray(response[field.key])
-                    ? response[field.key].join(", ") // Join array elements with a comma and space
+                    ? response[field.key].join(", ")
                     : response[field.key]
                   : "N/A"}
               </span>
@@ -216,9 +257,7 @@ const UserLifeStyleAndEducation = ({
         <ModalOverlay>
           <ModalContent>
             <ModalHeader>
-              {response
-                ? "Update Lifestyle and Education Details"
-                : "Add Lifestyle and Education Details"}
+              {response ? "Update Lifestyle and Education Details" : "Add Lifestyle and Education Details"}
             </ModalHeader>
             <FormWrapper>
               {lifeStyleAndEducationFields.map((field, index) => (
@@ -227,9 +266,7 @@ const UserLifeStyleAndEducation = ({
                   <Input
                     type="text"
                     value={updatedProfile[field.key] || ""}
-                    onChange={(e) =>
-                      handleFieldChange(field.key, e.target.value)
-                    }
+                    onChange={(e) => handleFieldChange(field.key, e.target.value)}
                   />
                 </InputField>
               ))}
@@ -247,23 +284,18 @@ const UserLifeStyleAndEducation = ({
               </div>
             ) : (
               <>
-                {success && (
-                  <Message success>Profile updated successfully!</Message>
-                )}
+                {success && <Message success>Profile updated successfully!</Message>}
                 {error && <Message>{error}</Message>}
               </>
             )}
-            <br />
-            <Button onClick={handleSubmit} disabled={loading}>
-              Save Changes
-            </Button>
-            <Button
-              onClick={toggleModal}
-              style={{ marginLeft: "10px" }}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
+            <ButtonContainer>
+              <Button onClick={handleSubmit} disabled={loading}>
+                Save Changes
+              </Button>
+              <Button onClick={toggleModal} disabled={loading}>
+                Cancel
+              </Button>
+            </ButtonContainer>
           </ModalContent>
         </ModalOverlay>
       )}

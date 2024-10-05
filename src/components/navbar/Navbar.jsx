@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -152,44 +152,37 @@ function Navbar() {
 
   return (
     <>
-      <AppBar
-        sx={{ padding: 0, backgroundColor: "pink", color: "gray" }}
-        position="static"
-      >
+      <AppBar sx={{ padding: 0, backgroundColor: "pink", color: "gray" }} position="static">
         <Toolbar>
-        <Typography
-  variant="h6"
-  sx={{
-    flexGrow: 1,
-    fontFamily: "'Lobster', cursive",
-    fontWeight: "bold",
-    fontSize: "2rem", // Increased font size for impact
-    color: "#f50057",
-    letterSpacing: "0.1em", // Slightly increased letter spacing
-    textTransform: "uppercase",
-    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.3)", // Adding text shadow for depth
-    background: "linear-gradient(to right, #f50057, #ff4081)", // Gradient background
-    WebkitBackgroundClip: "text", // For text gradient
-    WebkitTextFillColor: "transparent", // For text gradient
-  }}
->
-  Shubh Shaadi
-</Typography>
-
+          <Typography
+            variant="h6"
+            sx={{
+              flexGrow: 1,
+              fontFamily: "'Lobster', cursive",
+              fontWeight: "bold",
+              fontSize: { xs: "1.5rem", md: "2rem" }, // Responsive font size
+              color: "#f50057",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.3)",
+              background: "linear-gradient(to right, #f50057, #ff4081)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Shubh Shaadi
+          </Typography>
 
           {isMobile ? (
             <>
-              <IconButton
-                color="inherit"
-                aria-label="menu"
-                onClick={toggleDrawer(true)}
-              >
+              <IconButton color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
                 <MenuIcon />
               </IconButton>
               <Drawer
                 anchor="left"
                 open={isDrawerOpen}
                 onClose={toggleDrawer(false)}
+                sx={{ "& .MuiDrawer-paper": { paddingTop: "60px" } }} // Padding for better layout
               >
                 {drawerItems}
               </Drawer>
