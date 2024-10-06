@@ -53,7 +53,6 @@ const ButtonContainer = styled.div`
   @media (max-width: 768px) {
     top: 10px; /* Adjust top position for mobile */
     right: 10px; /* Adjust right position for mobile */
-    margin: 0; /* Remove margin for mobile */
   }
 `;
 
@@ -71,8 +70,9 @@ const Button = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: auto; /* Auto width for buttons */
-    margin-left: 0; /* Remove left margin on mobile */
+    width: 100%; /* Full width for buttons on mobile */
+    margin: 5px 0; /* Add vertical spacing for buttons */
+    font-size: 16px; /* Smaller font size on mobile */
   }
 `;
 
@@ -93,15 +93,24 @@ const ModalContent = styled.div`
   padding: 20px;
   border-radius: 8px;
   width: 90%; /* Responsive width */
-  max-width: 800px; /* Maximum width for larger screens */
+  max-width: 400px; /* Maximum width for mobile */
   max-height: 80vh; /* Limit modal height */
   overflow-y: auto; /* Enable vertical scrolling for content */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 15px; /* Less padding on mobile */
+  }
 `;
 
 const ModalHeader = styled.h2`
   margin: 0;
   margin-bottom: 20px;
+  font-size: 18px;
+
+  @media (max-width: 768px) {
+    font-size: 16px; /* Smaller font size on mobile */
+  }
 `;
 
 const FormWrapper = styled.div`
@@ -255,10 +264,10 @@ const UserFamilyDetails = ({ response, refresAfterUpdate, setStatus, status }) =
                 <InputField key={index}>
                   <Label>{field.value}</Label>
                   <Input
-                    type={field.key.includes("noOf") ? "number" : "text"} // Change input type based on field key
+                    type={field.key.includes("noOf") ? "number" : "text"}
                     value={updatedProfile[field.key] || ""}
                     onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                    min={0} // Optional: Prevent negative numbers
+                    min={0}
                   />
                 </InputField>
               ))}
@@ -277,21 +286,14 @@ const UserFamilyDetails = ({ response, refresAfterUpdate, setStatus, status }) =
               </div>
             ) : (
               <>
-                {success && (
-                  <Message success>Profile updated successfully!</Message>
-                )}
+                {success && <Message success>Profile updated successfully!</Message>}
                 {error && <Message>{error}</Message>}
               </>
             )}
-            <br />
             <Button onClick={handleSubmit} disabled={loading}>
               Save Changes
             </Button>
-            <Button
-              onClick={toggleModal}
-              style={{ marginLeft: "10px" }}
-              disabled={loading}
-            >
+            <Button onClick={toggleModal} disabled={loading}>
               Cancel
             </Button>
           </ModalContent>

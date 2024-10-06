@@ -122,6 +122,7 @@ const DemoCardDetails = () => {
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
+        style={{ marginTop:'8rem'}}
       >
         <h2
           style={{
@@ -131,6 +132,7 @@ const DemoCardDetails = () => {
             alignItems: "center", // Vertically center
             textAlign: "center", // Center text alignment
             width: "100%", // Ensure it takes full width of the container
+           
           }}
         >
           Basic Information

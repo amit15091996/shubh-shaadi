@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import AuthHook from "../../../auth/AuthHook";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { RingLoader } from "react-spinners";
-import { FormControl, Select, MenuItem, TextField } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
+// Styled components
 const CardContainer = styled(motion.div)`
   display: flex;
   position: relative;
@@ -15,40 +16,55 @@ const CardContainer = styled(motion.div)`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 1050px;
   background-color: #fcd5ce;
-  height: 300px;
+  max-height: 300px;
+  overflow-y: auto; /* Make the card content scrollable */
+
+  @media (max-width: 768px) {
+    padding: 14px;
+    margin-bottom: 20px;
+  }
 `;
 
 const ContentWrapper = styled.div`
-  flex: 2;  
-  padding: 35px;
+  flex: 2;
+  padding: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr;
-  gap: 20px; // Ensure this value is consistent
-  align-items: start;
+  gap: -5px;
+  max-height: 270px; /* Adjust this height based on your design */
+  overflow-y: fixed; /* Make the content scrollable */
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(120px, 1fr)
+    ); /* Responsive for mobile */
+  }
 `;
 
 const Field = styled.div`
-  // padding: 15px;
-  margin: 0;
+  padding: 10px;
   border-radius: 4px;
   color: #1f7a8c;
   font-size: 20px;
-  // line-height: 1.5; // Ensure consistent line height
-  overflow-y: auto;
-  word-wrap: break-word;
-  max-height: 60px;
-`;
-
-const ResidenceField = styled(Field)`
-  max-height: 120px;
-  overflow: auto;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const ButtonContainer = styled.div`
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 10px;
+
+  font-size: 16px;
+    padding: 8px 16px;
+          @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 1px 1px;
+  }
+  }
 `;
 
 const Button = styled.button`
@@ -59,6 +75,15 @@ const Button = styled.button`
   border-radius: 4px;
   font-size: 18px;
   cursor: pointer;
+  width: auto;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 5px 0;
+  width:'20px',
+  position:fixed
+  }
+
   &:hover {
     background-color: #1f7a8c;
   }
@@ -81,9 +106,18 @@ const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 800px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh; /* Limit the height */
+  overflow-y: auto; /* Allow scrolling */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1001;
+
+  @media (max-width: 768px) {
+    top:'2rem',
+    width: 40%;
+    padding: 20px;
+  }
 `;
 
 const ModalHeader = styled.h2`
@@ -95,6 +129,13 @@ const FormWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(120px, 1fr)
+    ); /* Responsive for mobile */
+  }
 `;
 
 const InputField = styled.div`
@@ -127,6 +168,10 @@ const Message = styled.div`
   margin-top: 15px;
   font-size: 16px;
   color: ${({ success }) => (success ? "green" : "red")};
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 // Fields array
@@ -141,6 +186,7 @@ export const fields = [
   { label: "Date of Birth", key: "dob" },
   { label: "Residence", key: "residence" },
   { label: "Mobile No", key: "mobileNumber", isDisabled: true },
+  { label: "Email Id", key: "mailId", isDisabled: true },
 ];
 
 // Main Component
@@ -166,10 +212,6 @@ const PrimaryUserDetails = ({
   };
 
   const handleFieldChange = (key, value) => {
-    // For age, ensure it's a number
-    if (key === "age" && isNaN(value)) {
-      return; // Prevent setting invalid age
-    }
     setUpdatedProfile((prevProfile) => ({
       ...prevProfile,
       [key]: value,
@@ -215,6 +257,7 @@ const PrimaryUserDetails = ({
             "success"
           ).then(() => {
             setIsModalOpen(false);
+            // Reload the page after closing the modal
             window.location.reload();
           });
         } else {
@@ -249,29 +292,18 @@ const PrimaryUserDetails = ({
         )}
 
         <ContentWrapper>
-          {fields.map((field, index) =>
-            field.key === "residence" ? (
-              <ResidenceField key={index}>
-                <strong>{field.label}:</strong>{" "}
-                <span style={{ color: "#003566" }}>
-                  {response && response[field.key] !== undefined
-                    ? response[field.key]
-                    : "N/A"}
-                </span>
-              </ResidenceField>
-            ) : (
-              <Field key={index}>
-                <strong>{field.label}:</strong>{" "}
-                <span style={{ color: "#003566" }}>
-                  {response && response[field.key] !== undefined
-                    ? Array.isArray(response[field.key])
-                      ? response[field.key].join(", ")
-                      : response[field.key]
-                    : "N/A"}
-                </span>
-              </Field>
-            )
-          )}
+          {fields.map((field, index) => (
+            <Field key={index}>
+              <strong>{field.label}:</strong>{" "}
+              <span style={{ color: "#003566" }}>
+                {response && response[field.key] !== undefined
+                  ? Array.isArray(response[field.key])
+                    ? response[field.key].join(", ")
+                    : response[field.key]
+                  : "N/A"}
+              </span>
+            </Field>
+          ))}
         </ContentWrapper>
       </CardContainer>
 
@@ -283,18 +315,7 @@ const PrimaryUserDetails = ({
               {fields.map((field, index) => (
                 <InputField key={index}>
                   <Label>{field.label}</Label>
-                  {field.key === "dob" ? (
-                    <TextField
-                      size="small"
-                      type="date"
-                      value={updatedProfile[field.key] || ""}
-                      onChange={(e) =>
-                        handleFieldChange(field.key, e.target.value)
-                      }
-                      fullWidth
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  ) : field.key === "religion" || field.key === "community" ? (
+                  {field.key === "religion" || field.key === "community" ? (
                     <FormControl fullWidth size="small">
                       <StyledSelect
                         value={updatedProfile[field.key] || ""}
@@ -302,6 +323,13 @@ const PrimaryUserDetails = ({
                           handleFieldChange(field.key, e.target.value)
                         }
                         size="small"
+                        MenuProps={{
+                          PaperProps: {
+                            style: {
+                              maxHeight: 300,
+                            },
+                          },
+                        }}
                       >
                         {field.key === "religion" && [
                           <MenuItem key="Hindu" value="Hindu">
@@ -353,7 +381,7 @@ const PrimaryUserDetails = ({
                     </FormControl>
                   ) : (
                     <Input
-                      type={field.key === "age" ? "number" : "text"}
+                      type={field.key === "mobileNumber" ? "text" : "text"}
                       value={updatedProfile[field.key] || ""}
                       onChange={(e) =>
                         handleFieldChange(field.key, e.target.value)
@@ -392,7 +420,7 @@ const PrimaryUserDetails = ({
             <Button onClick={handleSubmit} disabled={loading}>
               Save Changes
             </Button>
-            <Button onClick={toggleModal} style={{ marginLeft: "10px" }}>
+            <Button onClick={toggleModal} style={{ marginLeft: "5px" }}>
               Cancel
             </Button>
           </ModalContent>

@@ -15,10 +15,8 @@ const CardContainer = styled(motion.div)`
   max-width: 100%;
   background-color: #fcd5ce;
   max-height: 350px;
-
-  @media (max-width: 768px) {
-    flex-direction: column; /* Stack items on smaller screens */
-  }
+  margin-bottom: 40px;
+  padding-bottom: 60px;
 `;
 
 const ContentWrapper = styled.div`
@@ -26,15 +24,14 @@ const ContentWrapper = styled.div`
   padding: 30px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto 1fr;
   gap: 15px;
-  max-height: 300px;
+  max-height: 250px;
   overflow-y: auto;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    padding: 15px;
     max-height: 200px;
+    padding: 15px;
   }
 `;
 
@@ -43,6 +40,7 @@ const Field = styled.div`
   border-radius: 4px;
   color: #1f7a8c;
   font-size: 20px;
+  word-wrap: break-word;
 
   @media (max-width: 768px) {
     font-size: 16px;
@@ -50,18 +48,16 @@ const Field = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  position: absolute; /* Positioning it absolutely within CardContainer */
+  position: absolute;
   top: 20px;
   right: 20px;
-  display: flex; /* Align buttons in a row */
-  
+
   @media (max-width: 768px) {
-    position: absolute; /* Keep it absolute for mobile */
-    top: 10px; /* Adjust top position for mobile */
-    right: 10px; /* Adjust right position for mobile */
-    margin: 0; /* Remove margin for mobile */
+    top: 10px; /* Adjust top position */
+    right: 10px; /* Adjust right position */
   }
 `;
+
 
 const Button = styled.button`
   background-color: #003566;
@@ -71,20 +67,13 @@ const Button = styled.button`
   border-radius: 4px;
   font-size: 18px;
   cursor: pointer;
-  margin-left: 10px; /* Spacing between buttons */
-
-  &:first-child {
-    margin-left: 0; /* Remove margin for the first button */
-  }
 
   &:hover {
     background-color: #1f7a8c;
   }
 
   @media (max-width: 768px) {
-    width: auto; /* Auto width for buttons */
-    margin-left: 0; /* Remove left margin on mobile */
-    margin-bottom: 10px; /* Add bottom margin for spacing if needed */
+    width: 100%;
   }
 `;
 
@@ -94,25 +83,33 @@ const ModalOverlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7); /* Darker background for modal */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure the modal is on top of all content */
 `;
 
 const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 90%;
-  max-width: 800px;
+  width: 90%; /* Responsive width */
+  max-width: 800px; /* Maximum width for larger screens */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 15px; /* Adjust padding for mobile */
+  }
 `;
 
 const ModalHeader = styled.h2`
   margin: 0;
   margin-bottom: 20px;
+  font-size: 24px; /* Default font size */
+
+  @media (max-width: 768px) {
+    font-size: 20px; /* Smaller font size on mobile */
+  }
 `;
 
 const FormWrapper = styled.div`
@@ -193,36 +190,46 @@ const UserLifeStyleAndEducation = ({
     setError("");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Basic validation
+    for (const field of lifeStyleAndEducationFields) {
+      if (!updatedProfile[field.key]) {
+        setError(`${field.value} is required.`);
+        return; // Stop if validation fails
+      }
+    }
+
     setLoading(true);
     const apiUrl = response
       ? `https://shaadi-be.fino-web-app.agency/api/v1/update-user-life-style-details/${mobileNumber}`
       : `https://shaadi-be.fino-web-app.agency/api/v1/save-user-life-style?mobileNumber=${mobileNumber}`;
 
-    fetch(apiUrl, {
-      method: response ? "PUT" : "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedProfile),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLoading(false);
-        if (data.status === 200 || data.status === 201) {
-          setStatus(!status);
-          refresAfterUpdate && refresAfterUpdate(!status);
-          Swal.fire("Success!", "User details updated successfully!", "success").then(() => {
-            toggleModal(); // Close modal after success
-          });
-        } else {
-          Swal.fire("Error", "Failed to update user details", "error");
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-        Swal.fire("Error", "An error occurred. Please try again.", "error");
+    try {
+      const res = await fetch(apiUrl, {
+        method: response ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedProfile),
       });
+      const data = await res.json();
+      setLoading(false);
+
+      if (data.status === 200 || data.status === 201) {
+        setStatus(!status);
+        refresAfterUpdate && refresAfterUpdate(!status);
+        Swal.fire("Success!", "User details updated successfully!", "success").then(() => {
+          toggleModal();
+        });
+      } else {
+        setError(data.message || "Failed to update user details");
+        Swal.fire("Error", data.message || "Failed to update user details", "error");
+      }
+    } catch (err) {
+      setLoading(false);
+      setError("An error occurred. Please try again.");
+      Swal.fire("Error", "An error occurred. Please try again.", "error");
+    }
   };
 
   return (
@@ -284,18 +291,19 @@ const UserLifeStyleAndEducation = ({
               </div>
             ) : (
               <>
-                {success && <Message success>Profile updated successfully!</Message>}
                 {error && <Message>{error}</Message>}
               </>
             )}
-            <ButtonContainer>
-              <Button onClick={handleSubmit} disabled={loading}>
-                Save Changes
-              </Button>
-              <Button onClick={toggleModal} disabled={loading}>
-                Cancel
-              </Button>
-            </ButtonContainer>
+                <Button onClick={handleSubmit} disabled={loading} style={{marginTop:'5px'}}>
+              Save Changes
+            </Button>
+            <Button
+              onClick={toggleModal}
+              style={{ marginLeft: "5px", marginTop:'10px' }}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
           </ModalContent>
         </ModalOverlay>
       )}

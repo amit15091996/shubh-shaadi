@@ -117,6 +117,9 @@ function Navbar() {
             <ListItem button component={Link} to="/profiles">
               <ListItemText primary="Dashboard" />
             </ListItem>
+            <ListItem button component={Link} to="/change-password">
+              <ListItemText primary="Password" />
+            </ListItem>
             <ListItem button onClick={handleLogout}>
               <ListItemText primary="Logout" />
             </ListItem>
@@ -152,7 +155,7 @@ function Navbar() {
 
   return (
     <>
-      <AppBar sx={{ padding: 0, backgroundColor: "pink", color: "gray" }} position="static">
+      <AppBar sx={{ padding: 0, backgroundColor: "pink", color: "gray" }} position="fixed">
         <Toolbar>
           <Typography
             variant="h6"
@@ -196,6 +199,9 @@ function Navbar() {
                   </Button>
                   <Button color="inherit" component={Link} to="/profiles">
                     Dashboard
+                  </Button>
+                  <Button color="inherit" component={Link} to="/change-password">
+                  Password
                   </Button>
                   <Button color="inherit" onClick={handleLogout}>
                     Logout

@@ -104,6 +104,10 @@ const SearchContainer = styled.div`
   justify-content: flex-end;
   margin: 10px;
   width: 100%;
+  margin-top: 70px;
+   @media (max-width: 768px) {
+    margin-top: 130px
+   }
 `;
 
 const ScrollableContainer = styled(Box)`

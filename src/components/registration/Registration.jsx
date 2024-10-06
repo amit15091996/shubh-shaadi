@@ -185,12 +185,14 @@ function Registration() {
         backgroundColor: "#fefae0",
         maxWidth: "600px",
         margin: "auto",
-        mt: 5,
+        mt: 15,
         p: 3,
         boxShadow: 3,
         borderRadius: 2,
         display: "flex",
         flexDirection: "column",
+        overflowY: "auto", // Enable vertical scrolling
+        maxHeight: "90vh", // Limit the height for mobile
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom align="center">
@@ -241,198 +243,203 @@ function Registration() {
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          overflowY: "auto",
-          maxHeight: "70vh",
-          display: "flex",
-          flexDirection: "column",
-          flexGrow: 1,
-        }}
-      >
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="firstName"
-                label="First Name"
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="lastName"
-                label="Last Name"
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="mobileNumber"
-                label="Mobile Number"
-                type="number"
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-                inputProps={{ maxLength: 10 }}
-                onInput={(e) => {
-                  if (e.target.value.length > 10) {
-                    e.target.value = e.target.value.slice(0, 10);
-                  }
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="dob"
-                label="Date of Birth"
-                type="date"
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="age"
-                label="Age"
-                type="number"
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="gender-select-label">Gender</InputLabel>
-                <Select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  required
-                  label={"Gender"}
-                >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                  <MenuItem value="Others">Others</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="religion-select-label">Religion</InputLabel>
-                <Select
-                  name="religion"
-                  value={formData.religion}
-                  onChange={handleChange}
-                  required
-                  label={"Religion"}
-                >
-                  <MenuItem value="Hindu">Hindu</MenuItem>
-                  <MenuItem value="Muslim">Muslim</MenuItem>
-                  <MenuItem value="Christian">Christian</MenuItem>
-                  <MenuItem value="Others">Others</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="community"
-                label="Community"
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="residence"
-                label="Residence"
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="email"
-                label="Email"
-                type="email"
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="password"
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-                InputProps={{
-                  endAdornment: (
-                    <Button onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </Button>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="confirmPassword"
-                label="Confirm Password"
-                type={showConfirmPassword ? "text" : "password"}
-                fullWidth
-                onChange={handleChange}
-                required
-                size="small"
-                InputProps={{
-                  endAdornment: (
-                    <Button onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                    </Button>
-                  ),
-                }}
-              />
-              {passwordError && (
-                <Typography color="error" variant="caption">
-                  Passwords do not match
-                </Typography>
-              )}
-            </Grid>
+      <form onSubmit={handleSubmit} style={{ overflowY: "auto", flexGrow: 1 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="firstName"
+              label="First Name"
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+            />
           </Grid>
-        </form>
-      </Box>
-
-      <Grid item xs={12} mt={2}>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          disabled={loading}
-          onClick={handleSubmit}
-        >
-          {loading ? <ClipLoader size={20} color="#ffffff" /> : "Register"}
-        </Button>
-      </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="lastName"
+              label="Last Name"
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="mobileNumber"
+              label="Mobile Number"
+              type="number"
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+              inputProps={{ maxLength: 10 }}
+              onInput={(e) => {
+                if (e.target.value.length > 10) {
+                  e.target.value = e.target.value.slice(0, 10);
+                }
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="dob"
+              label="Date of Birth"
+              type="date"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              onChange={handleChange}
+              required
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="age"
+              label="Age"
+              type="number"
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="gender-select-label">Gender</InputLabel>
+              <Select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                required
+                label={"Gender"}
+              >
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Others">Others</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="religion-select-label">Religion</InputLabel>
+              <Select
+                name="religion"
+                value={formData.religion}
+                onChange={handleChange}
+                required
+                label={"Religion"}
+              >
+                <MenuItem value="Hindu">Hindu</MenuItem>
+                <MenuItem value="Muslim">Muslim</MenuItem>
+                <MenuItem value="Christian">Christian</MenuItem>
+                <MenuItem value="Sikh">Sikh</MenuItem>
+                <MenuItem value="Parsi">Parsi</MenuItem>
+                <MenuItem value="Jain">Jain</MenuItem>
+                <MenuItem value="Buddhist">Buddhist</MenuItem>
+                <MenuItem value="Jewish">Jewish</MenuItem>
+                <MenuItem value="No Religion">No Religion</MenuItem>
+                <MenuItem value="Spiritual - not religious">Spiritual</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="community-select-label">Community</InputLabel>
+              <Select
+                name="community"
+                value={formData.community}
+                onChange={handleChange}
+                required
+                label="Community"
+              >
+                <MenuItem value="English">English</MenuItem>
+                <MenuItem value="Hindi">Hindi</MenuItem>
+                <MenuItem value="Urdu">Urdu</MenuItem>
+                <MenuItem value="Telugu">Telugu</MenuItem>
+                <MenuItem value="Tamil">Tamil</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="residence"
+              label="Residence"
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="email"
+              label="Email"
+              type="email"
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="password"
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+              InputProps={{
+                endAdornment: (
+                  <Button onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </Button>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name="confirmPassword"
+              label="Confirm Password"
+              type={showConfirmPassword ? "text" : "password"}
+              fullWidth
+              onChange={handleChange}
+              required
+              size="small"
+              InputProps={{
+                endAdornment: (
+                  <Button onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </Button>
+                ),
+              }}
+            />
+            {passwordError && (
+              <Typography color="error" variant="caption">
+                Passwords do not match
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={loading}
+              onClick={handleSubmit}
+              sx={{ mt: 2 }} // Add some margin at the top
+            >
+              {loading ? <ClipLoader size={20} color="#ffffff" /> : "Register"}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
     </Box>
   );
 }

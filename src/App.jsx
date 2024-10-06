@@ -16,6 +16,7 @@ import LandingPage from "./components/landing/LandingPage";
 import landingImage from "./images/bg-image-1.jpg";
 import { Box, Card } from "@mui/material";
 import ForgotPassword from "./components/forgot-password/ForgotPassword";
+import ChangePassword from "./components/chnage-password/ChangePassword";
 
 const AppContent = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const AppContent = () => {
   const isRegisterPage = location.pathname === "/register";
   const isLoginPage = location.pathname === "/login";
   const isForgotPage = location.pathname === "/forgot-password";
+  const isChangePass = location.pathname === "/change-password";
   console.log(location.pathname);
   return (
     <Card>
@@ -32,11 +34,11 @@ const AppContent = () => {
           width: "100vw", // Set to full viewport width
           overflow: "auto",
           backgroundColor:
-            isLandingPage || isRegisterPage || isLoginPage || isForgotPage
+            isLandingPage || isRegisterPage || isLoginPage || isForgotPage || isChangePass
               ? "transparent"
               : "#001d4a",
           backgroundImage:
-            isLandingPage || isRegisterPage || isLoginPage || isForgotPage
+            isLandingPage || isRegisterPage || isLoginPage || isForgotPage || isChangePass
               ? `url(${landingImage})`
               : "none",
           backgroundSize: "cover",
@@ -56,6 +58,7 @@ const AppContent = () => {
           <Route path="/framer-data" element={<FramerCardData />} />
           <Route path="/profiles" element={<FramerCard />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/change-password" element={<ChangePassword />} />
           <Route
             path="/all-details/:mobileNumber"
             element={<DemoCardDetails />}

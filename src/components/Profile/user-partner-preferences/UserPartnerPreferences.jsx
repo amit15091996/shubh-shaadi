@@ -14,8 +14,9 @@ const CardContainer = styled(motion.div)`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 100%;
   background-color: #fcd5ce;
+  max-height: 350px;
   margin-bottom: 40px;
-  padding-bottom: 60px; 
+  padding-bottom: 60px;
 `;
 
 const ContentWrapper = styled.div`
@@ -24,15 +25,13 @@ const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
-  max-height: 250px; 
-  overflow-y: auto; 
+  max-height: 250px;
+  overflow-y: auto;
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens */
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr; /* One column on small screens */
+    grid-template-columns: 1fr;
+    max-height: 200px;
+    padding: 15px;
   }
 `;
 
@@ -41,14 +40,24 @@ const Field = styled.div`
   border-radius: 4px;
   color: #1f7a8c;
   font-size: 20px;
-  word-wrap: break-word; 
+  word-wrap: break-word;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const ButtonContainer = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
+
+  @media (max-width: 768px) {
+    top: 10px; /* Adjust top position */
+    right: 10px; /* Adjust right position */
+  }
 `;
+
 
 const Button = styled.button`
   background-color: #003566;
@@ -65,7 +74,6 @@ const Button = styled.button`
 
   @media (max-width: 768px) {
     width: 100%;
-    margin: 5px 0; 
   }
 `;
 
@@ -85,14 +93,23 @@ const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 90%; 
-  max-width: 800px; 
+  width: 90%; /* Responsive width */
+  max-width: 800px; /* Maximum width for larger screens */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 15px; /* Adjust padding for mobile */
+  }
 `;
 
 const ModalHeader = styled.h2`
   margin: 0;
   margin-bottom: 20px;
+  font-size: 24px; /* Default font size */
+
+  @media (max-width: 768px) {
+    font-size: 20px; /* Smaller font size on mobile */
+  }
 `;
 
 const FormWrapper = styled.div`
@@ -101,7 +118,7 @@ const FormWrapper = styled.div`
   gap: 15px;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr; /* Single column on mobile */
   }
 `;
 
@@ -120,6 +137,10 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px; /* Smaller font size on mobile */
+  }
 `;
 
 const Message = styled.div`
@@ -188,20 +209,12 @@ const UserPartnerPreferences = ({
       if (data.status === 200 || data.status === 201) {
         setStatus(!status);
         refresAfterUpdate && refresAfterUpdate(!status);
-        Swal.fire(
-          "Success!",
-          "User details updated successfully!",
-          "success"
-        ).then(() => {
-          toggleModal();
+        Swal.fire("Success!", "User details updated successfully!", "success").then(() => {
+          toggleModal(); // Close modal after success
         });
       } else {
         setError(data.message || "Failed to update user details");
-        Swal.fire(
-          "Error",
-          data.message || "Failed to update user details",
-          "error"
-        );
+        Swal.fire("Error", data.message || "Failed to update user details", "error");
       }
     } catch (err) {
       setLoading(false);
@@ -214,7 +227,7 @@ const UserPartnerPreferences = ({
     if (!text) return "N/A";
     const words = text.split(" ");
     if (words.length <= limit) return text;
-    return words.slice(0, limit).join(" ") + "..."; 
+    return words.slice(0, limit).join(" ") + "..."; // Add ellipsis if truncated
   };
 
   return (
@@ -243,9 +256,9 @@ const UserPartnerPreferences = ({
         </ContentWrapper>
       </CardContainer>
       {isModalOpen && (
-        <ModalOverlay aria-live="assertive">
+        <ModalOverlay>
           <ModalContent>
-            <ModalHeader>Update Profile</ModalHeader>
+            <ModalHeader>Update PartnerPreferences</ModalHeader>
             <FormWrapper>
               {partnerPreferencesFields.map((field, index) => (
                 <InputField key={index}>
@@ -283,7 +296,11 @@ const UserPartnerPreferences = ({
             <Button onClick={handleSubmit} disabled={loading}>
               Save Changes
             </Button>
-            <Button onClick={toggleModal} disabled={loading}>
+            <Button
+              onClick={toggleModal}
+              style={{ marginLeft: "5px", marginTop:'10px' }}
+              disabled={loading}
+            >
               Cancel
             </Button>
           </ModalContent>
