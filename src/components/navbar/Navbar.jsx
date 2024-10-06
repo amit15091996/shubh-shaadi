@@ -118,7 +118,7 @@ function Navbar() {
               <ListItemText primary="Dashboard" />
             </ListItem>
             <ListItem button component={Link} to="/change-password">
-              <ListItemText primary="Password" />
+              <ListItemText primary="Change Password" />
             </ListItem>
             <ListItem button onClick={handleLogout}>
               <ListItemText primary="Logout" />
@@ -201,7 +201,7 @@ function Navbar() {
                     Dashboard
                   </Button>
                   <Button color="inherit" component={Link} to="/change-password">
-                  Password
+                  Change Password
                   </Button>
                   <Button color="inherit" onClick={handleLogout}>
                     Logout
