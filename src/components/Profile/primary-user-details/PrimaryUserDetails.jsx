@@ -186,7 +186,7 @@ export const fields = [
   { label: "Date of Birth", key: "dob" },
   { label: "Residence", key: "residence" },
   { label: "Mobile No", key: "mobileNumber", isDisabled: true },
-  { label: "Email Id", key: "mailId", isDisabled: true },
+  { label: "Email Id", key: "mailId"},
 ];
 
 // Main Component
