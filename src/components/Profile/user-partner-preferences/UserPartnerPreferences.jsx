@@ -242,7 +242,7 @@ const UserPartnerPreferences = ({
             <Button onClick={toggleModal}>{response ? "Update" : "Add"}</Button>
           </ButtonContainer>
         )}
-        <ContentWrapper>
+         <ContentWrapper style={{marginTop:'25px'}}>
           {partnerPreferencesFields.map((field, index) => (
             <Field key={index}>
               {field.value}{" "}

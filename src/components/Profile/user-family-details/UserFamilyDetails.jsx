@@ -15,22 +15,20 @@ const CardContainer = styled(motion.div)`
   max-width: 100%;
   background-color: #fcd5ce;
   max-height: 350px;
+    padding: 20px;
+  margin-bottom: 40px;
 `;
 
 const ContentWrapper = styled.div`
-  flex: 2;
-  padding: 30px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto 1fr;
-  gap: 15px;
-  max-height: 300px; /* Limit height to allow scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
+    display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three columns for desktop */
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  // top:30px
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; /* Stack items on smaller screens */
-    padding: 15px;
-    max-height: 200px; /* Adjust max-height for mobile */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Responsive for mobile */
   }
 `;
 
@@ -70,9 +68,8 @@ const Button = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 100%; /* Full width for buttons on mobile */
-    margin: 5px 0; /* Add vertical spacing for buttons */
-    font-size: 16px; /* Smaller font size on mobile */
+    font-size: 16px;
+    padding: 8px 16px;
   }
 `;
 
@@ -90,10 +87,10 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   background-color: white;
-  padding: 20px;
+  padding: 30px; /* Increased padding for desktop */
   border-radius: 8px;
-  width: 90%; /* Responsive width */
-  max-width: 400px; /* Maximum width for mobile */
+  width: 80%; /* Adjusted width for desktop */
+  max-width: 600px; /* Maximum width for desktop */
   max-height: 80vh; /* Limit modal height */
   overflow-y: auto; /* Enable vertical scrolling for content */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -115,7 +112,7 @@ const ModalHeader = styled.h2`
 
 const FormWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* Two columns for desktop */
   gap: 15px;
 
   @media (max-width: 768px) {
@@ -171,8 +168,6 @@ const UserFamilyDetails = ({ response, refresAfterUpdate, setStatus, status }) =
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(response || {});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
   const session = AuthHook();
   const { mobileNumber } = useParams();
 
@@ -189,8 +184,6 @@ const UserFamilyDetails = ({ response, refresAfterUpdate, setStatus, status }) =
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
-    setSuccess(false);
-    setError("");
   };
 
   const handleSubmit = () => {
@@ -239,7 +232,7 @@ const UserFamilyDetails = ({ response, refresAfterUpdate, setStatus, status }) =
             </Button>
           </ButtonContainer>
         )}
-        <ContentWrapper>
+        <ContentWrapper style={{marginTop:'25px'}}>
           {familyFields.map((field, index) => (
             <Field key={index}>
               {field.value}{" "}
@@ -279,21 +272,17 @@ const UserFamilyDetails = ({ response, refresAfterUpdate, setStatus, status }) =
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  height: "100px",
+                  height: "100px"
                 }}
               >
                 <RingLoader color="#003566" size={60} />
               </div>
             ) : (
-              <>
-                {success && <Message success>Profile updated successfully!</Message>}
-                {error && <Message>{error}</Message>}
-              </>
+              <Button onClick={handleSubmit} disabled={loading} style={{marginTop:'10px'}}>
+                Save Changes
+              </Button>
             )}
-            <Button onClick={handleSubmit} disabled={loading}>
-              Save Changes
-            </Button>
-            <Button onClick={toggleModal} disabled={loading}>
+            <Button onClick={toggleModal} disabled={loading} style={{marginLeft:'5px'}}>
               Cancel
             </Button>
           </ModalContent>

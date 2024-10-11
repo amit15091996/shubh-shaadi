@@ -244,7 +244,7 @@ const UserLifeStyleAndEducation = ({
             <Button onClick={toggleModal}>{response ? "Update" : "Add"}</Button>
           </ButtonContainer>
         )}
-        <ContentWrapper>
+         <ContentWrapper style={{marginTop:'29px'}}>
           {lifeStyleAndEducationFields.map((field, index) => (
             <Field key={index}>
               {field.value}{" "}
