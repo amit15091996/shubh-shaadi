@@ -385,7 +385,7 @@ const LandingPage = () => {
         <div className="text-sm text-dark-900">
           &copy; {new Date().getFullYear()}
           <a
-            href="https://www.marriageharmony.in/"
+            href="https://www.marriageharmony.inn/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-400 hover:text-blue-600 no-underline"
