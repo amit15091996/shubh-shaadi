@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "..//../landingPage.css";;
+import "./LandingPage.css";
 
 const LandingPage = () => {
   const [gender, setGender] = useState("");
