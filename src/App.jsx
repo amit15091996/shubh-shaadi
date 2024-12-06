@@ -16,7 +16,6 @@ import LandingPage from "./components/landing/LandingPage";
 import { Box, Card } from "@mui/material";
 import ForgotPassword from "./components/forgot-password/ForgotPassword";
 import ChangePassword from "./components/change-password/ChangePassword";
-
 const AppContent = () => {
   return (
     <Card>
