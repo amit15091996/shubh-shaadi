@@ -4,18 +4,18 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-// import Registration from "./components/registration/Registration";
-// import Login from "./components/login/Login";
-// import Navbar from "./components/navbar/Navbar";
-// import CardEx from "./components/test/CardEx";
-// import FramerCardData from "./components/framer/FramerCardData";
-// import DemoCardDetails from "./components/framer/DemoCardDetails";
-// import FramerCard from "./components/framer/FramerCard";
-// import PrimaryUserDetails from "./components/Profile/primary-user-details/PrimaryUserDetails";
-// import LandingPage from "./components/landing/LandingPage";
-// import { Box, Card } from "@mui/material";
-// import ForgotPassword from "./components/forgot-password/ForgotPassword";
-// import ChangePassword from "./components/change-password/ChangePassword";
+import Registration from "./components/registration/Registration";
+import Login from "./components/login/Login";
+import Navbar from "./components/navbar/Navbar";
+import CardEx from "./components/test/CardEx";
+import FramerCardData from "./components/framer/FramerCardData";
+import DemoCardDetails from "./components/framer/DemoCardDetails";
+import FramerCard from "./components/framer/FramerCard";
+import PrimaryUserDetails from "./components/Profile/primary-user-details/PrimaryUserDetails";
+import LandingPage from "./components/landing/LandingPage";
+import { Box, Card } from "@mui/material";
+import ForgotPassword from "./components/forgot-password/ForgotPassword";
+import ChangePassword from "./components/change-password/ChangePassword";
 
 const AppContent = () => {
   return (
